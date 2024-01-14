@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "57367181651",
+    "project_id": "agenda-pastoral-2906d",
+    "storage_bucket": "agenda-pastoral-2906d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:57367181651:android:f66b63babfdc00dbd309a6",
+        "android_client_info": {
+          "package_name": "com.example.agenda_pastora_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBAtOvu80-TrWjHh-i3OoCpifrYoa2rUOw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
