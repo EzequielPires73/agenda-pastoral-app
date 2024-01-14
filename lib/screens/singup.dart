@@ -21,6 +21,7 @@ class _SingUpPageState extends State<SingUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Container(
           alignment: Alignment.center,

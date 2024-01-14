@@ -1,14 +1,14 @@
 import 'package:agenda_pastora_app/widgets/header.dart';
 import 'package:flutter/material.dart';
 
-class NotificationsPage extends StatefulWidget {
-  const NotificationsPage({super.key});
+class ProfilePage extends StatefulWidget {
+  const ProfilePage({super.key});
 
   @override
-  State<NotificationsPage> createState() => _NotificationsPageState();
+  State<ProfilePage> createState() => _ProfilePageState();
 }
 
-class _NotificationsPageState extends State<NotificationsPage> {
+class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -27,6 +27,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Container(
           alignment: Alignment.center,
@@ -82,7 +83,7 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(
                 height: 24,
               ),
-              ButtonPrimary(onPressed: () => showNotification(), title: 'Entrar'),
+              ButtonPrimary(onPressed: () => Navigator.pushReplacementNamed(context, '/home'), title: 'Entrar'),
               const SizedBox(
                 height: 24,
               ),

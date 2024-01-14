@@ -24,6 +24,6 @@ void main() async {
         create: (context) => FirebaseMessagingService(context.read<NotificationService>()),
       )
     ],
-    child: App(),
+    child: const App(),
   ));
 }

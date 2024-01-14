@@ -26,7 +26,7 @@ class TextFieldPrimary extends StatelessWidget {
       children: [
         Text(
           label,
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
         ),
         const SizedBox(
           height: 6,

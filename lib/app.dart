@@ -30,7 +30,7 @@ class _AppState extends State<App> {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: ColorPalette.primary),
+        colorScheme: ColorScheme.fromSeed(seedColor: ColorPalette.primary, background: Colors.white),
         useMaterial3: true,
       ),
       routes: Routes.list,
