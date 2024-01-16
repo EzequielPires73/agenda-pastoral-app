@@ -1,5 +1,7 @@
 import 'package:agenda_pastora_app/utils/colors.dart';
+import 'package:agenda_pastora_app/widgets/avatar.dart';
 import 'package:agenda_pastora_app/widgets/buttons/button_cancel.dart';
+import 'package:agenda_pastora_app/widgets/buttons/button_confirm.dart';
 import 'package:flutter/material.dart';
 
 enum AppointmentStatus {
@@ -84,17 +86,59 @@ class CardAppointmentsUser extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Future<void> _showMyDialog() async {
+      return showDialog<void>(
+        context: context,
+        barrierDismissible: false, // user must tap button!
+        builder: (BuildContext context) {
+          return AlertDialog(
+            backgroundColor: Colors.white,
+            surfaceTintColor: Colors.white,
+            title: const Text(
+              'Cancelar Agendamento',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+            ),
+            content: const SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Text('Deseja mesmo cancelar o agendamento?'),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              Row(
+                children: [
+                  Expanded(
+                    child: ButtonCancel(
+                        onPressed: () => Navigator.of(context).pop(),
+                        title: 'Cancelar'),
+                  ),
+                  const SizedBox(
+                    width: 8,
+                  ),
+                  Expanded(
+                    child: ButtonConfirm(
+                        onPressed: () => Navigator.of(context).pop(),
+                        title: 'Confirmar'),
+                  ),
+                ],
+              ),
+            ],
+          );
+        },
+      );
+    }
+
     return Card(
       elevation: 0,
       color: Colors.white,
       surfaceTintColor: Colors.white,
-      margin: const EdgeInsets.only(bottom: 16), 
+      margin: const EdgeInsets.only(bottom: 16),
       child: Container(
         padding: EdgeInsets.all(12),
         decoration: BoxDecoration(
-          border: Border.all(color: const Color(0xffDDDDDD), width: 1),
-          borderRadius: BorderRadius.circular(8)
-        ),
+            border: Border.all(color: const Color(0xffDDDDDD), width: 1),
+            borderRadius: BorderRadius.circular(8)),
         child: Column(children: [
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -150,36 +194,40 @@ class CardAppointmentsUser extends StatelessWidget {
                   const SizedBox(
                     height: 8,
                   ),
-                  const InkWell(
-                    child: Text(
-                      'Detalhes',
-                      style: TextStyle(
-                          color: ColorPalette.primary,
-                          fontWeight: FontWeight.w500),
-                    ),
-                  )
                 ],
               ),
-              Container(
-                width: 64,
-                height: 64,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(64),
-                  border: Border.all(color: ColorPalette.gray3, width: 3),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(64),
-                  child: Image.network(
-                      'https://adcatalao.nyc3.digitaloceanspaces.com/wp-content/uploads/2018/04/FOTO-PASTORES-DO-CAMPO-AD-CATAL%C3%83O.jpg',
-                      fit: BoxFit.cover),
-                ),
+              const Avatar(
+                image:
+                    'https://adcatalao.nyc3.digitaloceanspaces.com/wp-content/uploads/2018/04/FOTO-PASTORES-DO-CAMPO-AD-CATAL%C3%83O.jpg',
               )
             ],
           ),
           const SizedBox(
             height: 16,
           ),
-          status == AppointmentStatus.confirmado || status == AppointmentStatus.pendente ? ButtonCancel(onPressed: () {}, title: 'Cancelar') : Container()
+          Row(
+            children: [
+              status == AppointmentStatus.confirmado ||
+                      status == AppointmentStatus.pendente
+                  ? Expanded(
+                      child: ButtonCancel(
+                          onPressed: _showMyDialog, title: 'Cancelar'),
+                    )
+                  : Container(),
+              SizedBox(
+                width: status == AppointmentStatus.confirmado ||
+                        status == AppointmentStatus.pendente
+                    ? 8
+                    : 0,
+              ),
+              Expanded(
+                child: ButtonConfirm(
+                    onPressed: () =>
+                        Navigator.pushNamed(context, '/details_appointments'),
+                    title: 'Detalhes'),
+              ),
+            ],
+          ),
         ]),
       ),
     );

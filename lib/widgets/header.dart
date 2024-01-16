@@ -1,4 +1,5 @@
 import 'package:agenda_pastora_app/utils/colors.dart';
+import 'package:agenda_pastora_app/widgets/avatar.dart';
 import 'package:flutter/material.dart';
 
 class Header extends StatelessWidget {
@@ -10,15 +11,15 @@ class Header extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.only(left: 25, right: 25, top: 48, bottom: 32),
       color: ColorPalette.primary,
-      child: Row(
+      child: const Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Column(
+          Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Olá, Gustavo Neves',
+                'Olá, Ezequiel Pires',
                 style: TextStyle(
                     color: Colors.white,
                     fontSize: 24,
@@ -33,20 +34,7 @@ class Header extends StatelessWidget {
               ),
             ],
           ),
-          Container(
-            width: 64,
-            height: 64,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(64),
-              border: Border.all(color: Colors.white, width: 3),
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(64),
-              child: Image.network(
-                  'https://img.freepik.com/fotos-gratis/retrato-de-homem-feliz-e-sorridente_23-2149022620.jpg?size=626&ext=jpg&ga=GA1.1.1412446893.1705190400&semt=ais',
-                  fit: BoxFit.cover),
-            ),
-          )
+          Avatar(image: 'https://avatars.githubusercontent.com/u/145378534?v=4', color: Colors.white,)
         ],
       ),
     );
