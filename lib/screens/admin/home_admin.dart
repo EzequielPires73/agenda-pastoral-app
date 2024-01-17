@@ -37,11 +37,11 @@ class _HomeAdminPageState extends State<HomeAdminPage> {
             transform: Matrix4.translationValues(0, -16, 0),
             padding: const EdgeInsets.symmetric(
               horizontal: 25,
-              vertical: 32,
+              vertical: 8,
             ),
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16)),
             ),
           ),
           Column(
@@ -96,7 +96,7 @@ class _HomeAdminPageState extends State<HomeAdminPage> {
                   'Pendentes',
                   style: TextStyle(
                     fontSize: 18,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w600,
                     color: ColorPalette.gray3,
                   ),
                 ),
