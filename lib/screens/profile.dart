@@ -21,34 +21,53 @@ class _ProfilePageState extends State<ProfilePage> {
         width: double.infinity,
         transform: Matrix4.translationValues(0, -16, 0),
         padding: const EdgeInsets.symmetric(
-          horizontal: 32,
-          vertical: 25,
+          horizontal: 25,
+          vertical: 32,
         ),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
         ),
-        child: Column(children: [
-          InkWell(
-            onTap: () => Navigator.pushReplacementNamed(context, '/login'),
-            child: const Row(
-              children: [
-                Icon(FeatherIcons.logOut, color: ColorPalette.gray3),
-                SizedBox(
-                  width: 16,
-                ),
-                Text(
-                  'Sair',
-                  style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500,
-                      color: ColorPalette.gray3),
-                ),
-              ],
-            ),
-          ),
+        child: const Column(children: [
+          ProfileItem(icon: FeatherIcons.edit, path: '/edit_user', title: 'Editar Perfil'),
+          SizedBox(height: 24,),
+          ProfileItem(icon: FeatherIcons.info, path: '/about', title: 'Sobre o app'),
+          SizedBox(height: 24,),
+          ProfileItem(icon: FeatherIcons.shield, path: '/privacy_policy', title: 'Politica de privacidade'),
+          SizedBox(height: 24,),
+          ProfileItem(icon: FeatherIcons.logOut, path: '/choose_role', title: 'Sair'),
         ]),
       ),
     ])));
+  }
+}
+
+class ProfileItem extends StatelessWidget {
+  final String path;
+  final String title;
+  final IconData icon;
+  const ProfileItem(
+      {super.key, required this.icon, required this.path, required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () => Navigator.pushReplacementNamed(context, path),
+      child: Row(
+        children: [
+          Icon(icon, color: ColorPalette.gray3),
+          const SizedBox(
+            width: 16,
+          ),
+          Text(
+            title,
+            style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: ColorPalette.gray3),
+          ),
+        ],
+      ),
+    );
   }
 }

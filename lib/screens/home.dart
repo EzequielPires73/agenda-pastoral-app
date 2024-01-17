@@ -38,8 +38,8 @@ class _HomePageState extends State<HomePage> {
               width: double.infinity,
               transform: Matrix4.translationValues(0, -16, 0),
               padding: const EdgeInsets.symmetric(
-                horizontal: 32,
-                vertical: 25,
+                horizontal: 25,
+                vertical: 32,
               ),
               decoration: BoxDecoration(
                 color: Colors.white,
