@@ -12,8 +12,12 @@ class CardNotification extends StatelessWidget {
         child: Row(
           children: [
             const Avatar(
-                image: 'https://avatars.githubusercontent.com/u/145378534?v=4'),
-                const SizedBox(width: 16,),
+              image: 'https://avatars.githubusercontent.com/u/145378534?v=4',
+              name: 'Notificação',
+            ),
+            const SizedBox(
+              width: 16,
+            ),
             Expanded(
               child: RichText(
                 text: TextSpan(
@@ -25,7 +29,9 @@ class CardNotification extends StatelessWidget {
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                     ),
                     TextSpan(
-                        text: ' Marcou um agendamento Pastoral no dia 17/01 às 09:00'),
+                      text:
+                          ' Marcou um agendamento Pastoral no dia 17/01 às 09:00',
+                    ),
                   ],
                 ),
               ),

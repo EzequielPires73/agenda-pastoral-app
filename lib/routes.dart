@@ -8,10 +8,12 @@ import 'package:agenda_pastora_app/screens/home.dart';
 import 'package:agenda_pastora_app/screens/login.dart';
 import 'package:agenda_pastora_app/screens/notifications.dart';
 import 'package:agenda_pastora_app/screens/singup.dart';
+import 'package:agenda_pastora_app/screens/splash.dart';
 import 'package:flutter/material.dart';
 
 class Routes {
   static Map<String, Widget Function(BuildContext)> list = <String, WidgetBuilder> {
+    '/splash': (_) => const Splash(),
     '/choose_role': (_) => const ChooseRolePage(),
     '/login': (_) => const LoginPage(),
     '/home': (_) => const ScreenNavigatorPage(),
@@ -25,7 +27,7 @@ class Routes {
     '/admin/home': (_) => const ScreenNavigatorAdminPage(),
   };
 
-  static String initial = '/choose_role';
+  static String initial = '/splash';
 
   static GlobalKey<NavigatorState>? navigatorKey = GlobalKey<NavigatorState>();
 }

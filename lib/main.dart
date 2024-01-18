@@ -1,4 +1,5 @@
 import 'package:agenda_pastora_app/app.dart';
+import 'package:agenda_pastora_app/controllers/auth_controller.dart';
 import 'package:agenda_pastora_app/routes.dart';
 import 'package:agenda_pastora_app/screens/login.dart';
 import 'package:agenda_pastora_app/services/firebase_messaging_service.dart';
@@ -10,7 +11,6 @@ import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:intl/intl.dart';
-
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,7 +24,11 @@ void main() async {
         create: (context) => NotificationService(),
       ),
       Provider<FirebaseMessagingService>(
-        create: (context) => FirebaseMessagingService(context.read<NotificationService>()),
+        create: (context) =>
+            FirebaseMessagingService(context.read<NotificationService>()),
+      ),
+      ChangeNotifierProvider(
+        create: (context) => AuthController(),
       )
     ],
     child: const App(),

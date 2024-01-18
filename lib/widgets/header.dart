@@ -1,12 +1,18 @@
+import 'package:agenda_pastora_app/controllers/auth_controller.dart';
+import 'package:agenda_pastora_app/models/user.dart';
 import 'package:agenda_pastora_app/utils/colors.dart';
 import 'package:agenda_pastora_app/widgets/avatar.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class Header extends StatelessWidget {
   const Header({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final controller = context.watch<AuthController>();
+    final UserAbstract? user = controller.member ?? controller.user;
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.only(left: 25, right: 25, top: 48, bottom: 32),
@@ -18,9 +24,9 @@ class Header extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Olá, Ezequiel Pires',
-                style: TextStyle(
+              Text(
+                'Olá, ${user?.name}',
+                style: const TextStyle(
                     color: Colors.white,
                     fontSize: 24,
                     fontWeight: FontWeight.w500),
@@ -40,10 +46,11 @@ class Header extends StatelessWidget {
               ),
             ],
           ),
-          const Avatar(
-            image: 'https://avatars.githubusercontent.com/u/145378534?v=4',
+          user != null ? Avatar(
+            image: user.avatar?.isNotEmpty == true ? user.avatar : null,
+            name: user.name,
             color: Colors.white,
-          )
+          ) : Container()
         ],
       ),
     );

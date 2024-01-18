@@ -1,8 +1,10 @@
+import 'package:agenda_pastora_app/models/appointment.dart';
 import 'package:agenda_pastora_app/utils/colors.dart';
 import 'package:agenda_pastora_app/widgets/avatar.dart';
 import 'package:agenda_pastora_app/widgets/buttons/button_cancel.dart';
 import 'package:agenda_pastora_app/widgets/buttons/button_confirm.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 enum AppointmentStatus {
   pendente,
@@ -12,22 +14,22 @@ enum AppointmentStatus {
 }
 
 class CardAppointmentsUser extends StatelessWidget {
-  final AppointmentStatus status;
-  const CardAppointmentsUser({super.key, required this.status});
+  final Appointment appointment;
+  const CardAppointmentsUser({super.key, required this.appointment});
 
   getColor() {
     Color color;
-    switch (status) {
-      case AppointmentStatus.confirmado:
+    switch (appointment.status) {
+      case 'confirmado':
         color = ColorPalette.green;
         break;
-      case AppointmentStatus.pendente:
+      case 'pendente':
         color = ColorPalette.primary;
         break;
-      case AppointmentStatus.finalizado:
+      case 'finalizado':
         color = ColorPalette.blue;
         break;
-      case AppointmentStatus.declinado:
+      case 'declinado':
         color = ColorPalette.red;
         break;
 
@@ -40,17 +42,17 @@ class CardAppointmentsUser extends StatelessWidget {
 
   getBackground() {
     Color color;
-    switch (status) {
-      case AppointmentStatus.confirmado:
+    switch (appointment.status) {
+      case 'confirmado':
         color = ColorPalette.greenLight;
         break;
-      case AppointmentStatus.pendente:
+      case 'pendente':
         color = ColorPalette.primaryLight;
         break;
-      case AppointmentStatus.finalizado:
+      case 'finalizado':
         color = ColorPalette.blueLight;
         break;
-      case AppointmentStatus.declinado:
+      case 'declinado':
         color = ColorPalette.redLight;
         break;
 
@@ -63,17 +65,17 @@ class CardAppointmentsUser extends StatelessWidget {
 
   getStatusText() {
     String title;
-    switch (status) {
-      case AppointmentStatus.confirmado:
+    switch (appointment.status) {
+      case 'confirmado':
         title = 'Confirmado';
         break;
-      case AppointmentStatus.pendente:
+      case 'pendente':
         title = 'Pendente';
         break;
-      case AppointmentStatus.finalizado:
+      case 'finalizado':
         title = 'Finalizado';
         break;
-      case AppointmentStatus.declinado:
+      case 'declinado':
         title = 'Declinado';
         break;
 
@@ -164,9 +166,9 @@ class CardAppointmentsUser extends StatelessWidget {
                   const SizedBox(
                     height: 4,
                   ),
-                  const Text(
-                    'Aconselhamento Pastoral',
-                    style: TextStyle(
+                  Text(
+                    appointment.category.name,
+                    style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
                         color: ColorPalette.gray3),
@@ -184,9 +186,10 @@ class CardAppointmentsUser extends StatelessWidget {
                   const SizedBox(
                     height: 4,
                   ),
-                  const Text(
-                    '12/01 - 09:00',
-                    style: TextStyle(
+                  Text(
+                    _formatDateTime(
+                        appointment.date, appointment.start, appointment.end),
+                    style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
                         color: ColorPalette.gray3),
@@ -196,9 +199,12 @@ class CardAppointmentsUser extends StatelessWidget {
                   ),
                 ],
               ),
-              const Avatar(
-                image:
-                    'https://adcatalao.nyc3.digitaloceanspaces.com/wp-content/uploads/2018/04/FOTO-PASTORES-DO-CAMPO-AD-CATAL%C3%83O.jpg',
+              Avatar(
+                image: appointment.member.avatar?.isNotEmpty == true
+                    ? appointment.member.avatar
+                    : null,
+                name: appointment.member.name,
+                color: Colors.white,
               )
             ],
           ),
@@ -207,16 +213,16 @@ class CardAppointmentsUser extends StatelessWidget {
           ),
           Row(
             children: [
-              status == AppointmentStatus.confirmado ||
-                      status == AppointmentStatus.pendente
+              appointment.status == 'confirmado' ||
+                      appointment.status == 'pendente'
                   ? Expanded(
                       child: ButtonCancel(
                           onPressed: _showMyDialog, title: 'Cancelar'),
                     )
                   : Container(),
               SizedBox(
-                width: status == AppointmentStatus.confirmado ||
-                        status == AppointmentStatus.pendente
+                width: appointment.status == 'confirmado' ||
+                        appointment.status == 'pendente'
                     ? 8
                     : 0,
               ),
@@ -231,5 +237,19 @@ class CardAppointmentsUser extends StatelessWidget {
         ]),
       ),
     );
+  }
+
+  String _formatDateTime(String date, String startTime, String endTime) {
+    final DateFormat dateFormat = DateFormat('MM/dd');
+    final DateFormat timeFormat = DateFormat('HH:mm');
+
+    DateTime startDate = DateTime.parse(date);
+    String formattedDate = dateFormat.format(startDate);
+    String formattedStartTime =
+        timeFormat.format(DateTime.parse('2000-01-01 $startTime'));
+    String formattedEndTime =
+        timeFormat.format(DateTime.parse('2000-01-01 $endTime'));
+
+    return '$formattedDate - $formattedStartTime - $formattedEndTime';
   }
 }

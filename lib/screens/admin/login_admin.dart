@@ -1,4 +1,6 @@
+import 'package:agenda_pastora_app/controllers/auth_controller.dart';
 import 'package:agenda_pastora_app/models/custom_notification.dart';
+import 'package:agenda_pastora_app/services/firebase_messaging_service.dart';
 import 'package:agenda_pastora_app/services/notification_service.dart';
 import 'package:agenda_pastora_app/utils/colors.dart';
 import 'package:agenda_pastora_app/widgets/buttons/button_primary.dart';
@@ -6,6 +8,7 @@ import 'package:agenda_pastora_app/widgets/buttons/button_secondary.dart';
 import 'package:agenda_pastora_app/widgets/form_components/text_field_primary.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginAdminPage extends StatefulWidget {
   const LoginAdminPage({super.key});
@@ -15,13 +18,60 @@ class LoginAdminPage extends StatefulWidget {
 }
 
 class _LoginAdminPageState extends State<LoginAdminPage> {
+  late final AuthController controller;
   final email = TextEditingController();
   final password = TextEditingController();
+  late final String? tokenNotification;
 
-  showNotification() {
+  /* showNotification() {
     Provider.of<NotificationService>(context, listen: false).showNotification(
       CustomNotification(id: 1, title: 'Teste', body: 'Acesse o app', payload: '/notificacao')
     );
+  } */
+
+  Future<void> _handleSubmit() async {
+    controller.singinUser(
+        email.value.text, password.value.text);
+  }
+
+  void _authListener() {
+    AuthState state = controller.state;
+    switch (state) {
+      case AuthState.idle:
+        print('Estado: Idle');
+        break;
+      case AuthState.success:
+        Navigator.pushNamed(context, '/admin/home');
+        break;
+      case AuthState.error:
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(controller.errorMsg)));
+        break;
+    }
+  }
+
+  Future<void> getNotificationToken() async {
+    var notificationService = context.read<FirebaseMessagingService>();
+    tokenNotification = await notificationService.getDeviceFirebaseToken();
+
+    if (tokenNotification != null) {
+      final shared = await SharedPreferences.getInstance();
+      await shared.setString('tokenNotification', tokenNotification!);
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    controller = context.read<AuthController>();
+    controller.addListener(_authListener);
+    getNotificationToken();
+  }
+
+  @override
+  void dispose() {
+    controller.removeListener(_authListener);
+    super.dispose();
   }
 
   @override
@@ -78,14 +128,21 @@ class _LoginAdminPageState extends State<LoginAdminPage> {
               ),
               Container(
                 alignment: Alignment.centerRight,
-                child: const InkWell(child: Text('Esqueceu sua senha?', style: TextStyle(fontWeight: FontWeight.w600),)),
+                child: const InkWell(
+                    child: Text(
+                  'Esqueceu sua senha?',
+                  style: TextStyle(fontWeight: FontWeight.w600),
+                )),
               ),
               const SizedBox(
                 height: 24,
               ),
-              ButtonPrimary(onPressed: () => Navigator.pushReplacementNamed(context, '/admin/home'), title: 'Entrar'),
-              const SizedBox(
-                height: 24,
+              Consumer<AuthController>(
+                builder: (context, value, child) => ButtonPrimary(
+                  onPressed: _handleSubmit,
+                  title: 'Entrar',
+                  isLoading: value.isLoading,
+                ),
               ),
             ],
           ),

@@ -208,6 +208,7 @@ class CardAppointmentsAdmin extends StatelessWidget {
               ),
               const Avatar(
                 image: 'https://avatars.githubusercontent.com/u/145378534?v=4',
+                name: 'Ezequiel Pires',
               )
             ],
           ),

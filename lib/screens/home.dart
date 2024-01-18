@@ -1,3 +1,5 @@
+import 'package:agenda_pastora_app/models/appointment.dart';
+import 'package:agenda_pastora_app/repositories/appointment_repository.dart';
 import 'package:agenda_pastora_app/utils/colors.dart';
 import 'package:agenda_pastora_app/widgets/cards/card-appointments-user.dart';
 import 'package:agenda_pastora_app/widgets/header.dart';
@@ -12,11 +14,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final AppointmentRepository _repository = AppointmentRepository();
   final active = 1;
-  List<AppointmentStatus> agendamentos = [AppointmentStatus.confirmado, AppointmentStatus.pendente, AppointmentStatus.pendente, AppointmentStatus.pendente, AppointmentStatus.confirmado, AppointmentStatus.pendente];
-
+  List<Appointment> appointments = [];
+  
   setResults(int index) {
-    if(index == 0) {
+    /* if(index == 0) {
       setState(() {
         agendamentos = [AppointmentStatus.confirmado, AppointmentStatus.pendente, AppointmentStatus.pendente, AppointmentStatus.pendente, AppointmentStatus.confirmado, AppointmentStatus.pendente];
       });
@@ -24,7 +27,20 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         agendamentos = [AppointmentStatus.finalizado, AppointmentStatus.declinado,];
       });
-    }
+    } */
+  }
+
+  Future<void> findAppointments() async {
+    var results = await _repository.findAppointments();
+    setState(() {
+      appointments = results;
+    });
+  }
+
+  @override
+  void initState() {
+    findAppointments();
+    super.initState();
   }
 
   @override
@@ -64,7 +80,7 @@ class _HomePageState extends State<HomePage> {
                       ],
                     ),
                     const SizedBox(height: 16,),
-                    ...agendamentos.map((e) => CardAppointmentsUser(status: e,)).toList(),
+                    ...appointments.map((e) => CardAppointmentsUser(appointment: e,)).toList(),
                   ],
                 ),
               ),
