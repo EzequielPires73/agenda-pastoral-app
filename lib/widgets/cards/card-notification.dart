@@ -7,6 +7,7 @@ class CardNotification extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
+      onTap: () => Navigator.pushNamed(context, '/details_appointments'),
       child: Container(
         child: Row(
           children: [

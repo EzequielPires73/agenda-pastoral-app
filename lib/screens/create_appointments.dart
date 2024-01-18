@@ -164,6 +164,7 @@ class _CreateAppointmentsPageState extends State<CreateAppointmentsPage> {
               controller: observation,
               label: 'Observação',
               placeholder: 'Descreva brevemente o agendamento',
+              maxLines: 4,
             ),
           ),
         ),

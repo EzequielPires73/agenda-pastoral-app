@@ -47,7 +47,7 @@ class _LoginAdminPageState extends State<LoginAdminPage> {
               const Text(
                 'Agenda Pastoral',
                 style: TextStyle(
-                    fontSize: 24,
+                    fontSize: 20,
                     fontWeight: FontWeight.w600,
                     color: ColorPalette.primary),
               ),

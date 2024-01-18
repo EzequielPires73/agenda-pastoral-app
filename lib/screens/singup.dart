@@ -40,8 +40,9 @@ class _SingUpPageState extends State<SingUpPage> {
               ),
               const Text(
                 'Junte-se à Agenda Pastoral',
+                textAlign: TextAlign.center,
                 style: TextStyle(
-                    fontSize: 24,
+                    fontSize: 20,
                     fontWeight: FontWeight.w600,
                     color: ColorPalette.primary),
               ),

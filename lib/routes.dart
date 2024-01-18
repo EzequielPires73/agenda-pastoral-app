@@ -15,7 +15,7 @@ class Routes {
     '/choose_role': (_) => const ChooseRolePage(),
     '/login': (_) => const LoginPage(),
     '/home': (_) => const ScreenNavigatorPage(),
-    '/notificacao': (_) => const NotificationsPage(),
+    '/notification': (_) => const NotificationsPage(),
     '/singup': (_) => const SingUpPage(),
     '/create_appointments': (_) => const CreateAppointmentsPage(),
     '/details_appointments': (_) => const DetailsAppointments(),

@@ -8,6 +8,7 @@ class TextFieldPrimary extends StatelessWidget {
   final TextEditingController controller;
   final bool obscureText;
   final bool? required;
+  final int? maxLines;
   final List<TextInputFormatter>? formatter;
 
   const TextFieldPrimary(
@@ -17,7 +18,9 @@ class TextFieldPrimary extends StatelessWidget {
       this.obscureText = false,
       this.required,
       this.placeholder,
-      this.formatter});
+      this.formatter,
+      this.maxLines
+    });
 
   @override
   Widget build(BuildContext context) {
@@ -40,13 +43,14 @@ class TextFieldPrimary extends StatelessWidget {
           controller: controller,
           inputFormatters: formatter,
           obscureText: obscureText,
+          maxLines: maxLines ?? 1,
           decoration: InputDecoration(
               contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
               hintText: placeholder ?? '',
               fillColor: ColorPalette.input,
               filled: true,
               enabledBorder: const OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.black12),
+                borderSide: BorderSide(color: Color(0xffeeeeee)),
               ),
               border: const OutlineInputBorder()),
         )

@@ -47,7 +47,7 @@ class _LoginPageState extends State<LoginPage> {
               const Text(
                 'Conecte-se ao Pastor',
                 style: TextStyle(
-                    fontSize: 24,
+                    fontSize: 20,
                     fontWeight: FontWeight.w600,
                     color: ColorPalette.primary),
               ),
