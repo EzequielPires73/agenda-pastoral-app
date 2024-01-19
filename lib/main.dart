@@ -1,4 +1,5 @@
 import 'package:agenda_pastora_app/app.dart';
+import 'package:agenda_pastora_app/controllers/appointment_controller.dart';
 import 'package:agenda_pastora_app/controllers/auth_controller.dart';
 import 'package:agenda_pastora_app/routes.dart';
 import 'package:agenda_pastora_app/screens/login.dart';
@@ -29,7 +30,8 @@ void main() async {
       ),
       ChangeNotifierProvider(
         create: (context) => AuthController(),
-      )
+      ),
+      ChangeNotifierProvider(create: (context) => AppointmentController(),)
     ],
     child: const App(),
   ));

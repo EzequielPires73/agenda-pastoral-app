@@ -13,11 +13,11 @@ class AvailableTime {
 }
 
 class Time {
-  int id;
+  int? id;
   String start;
   String end;
 
-  Time({required this.id, required this.end, required this.start});
+  Time({required this.end, required this.start, this.id});
 
   factory Time.fromJson(Map<String, dynamic> json) {
     return Time(id: json['id'], end: json['end'], start: json['start']);
