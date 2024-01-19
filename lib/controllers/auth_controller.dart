@@ -93,11 +93,13 @@ class AuthController extends ChangeNotifier {
         await pushNotificationTokenUser(null);
         await shared.remove('user');
         await shared.remove('user.access_token');
+        user = null;
       }
       if (member != null) {
         await pushNotificationTokenMember(null);
         await shared.remove('member');
         await shared.remove('member.access_token');
+        member = null;
       }
       notifyListeners();
     } catch (error) {

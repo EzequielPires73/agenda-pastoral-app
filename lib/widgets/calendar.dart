@@ -60,13 +60,6 @@ class _CustomCalendarState extends State<CustomCalendar> {
           todayTextStyle: TextStyle(
             color: ColorPalette.primary,
           ),
-          /* disabledDecoration: BoxDecoration(
-            color: ColorPalette.redLight,
-            shape: BoxShape.circle,
-          ),
-          disabledTextStyle: TextStyle(
-            color: ColorPalette.red,
-          ), */
           selectedDecoration: BoxDecoration(
             color: ColorPalette.primary,
             shape: BoxShape.circle,
