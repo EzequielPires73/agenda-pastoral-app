@@ -38,10 +38,9 @@ class _LoginPageState extends State<LoginPage> {
     AuthState state = controller.state;
     switch (state) {
       case AuthState.idle:
-        print('Estado: Idle');
         break;
       case AuthState.success:
-        Navigator.pushNamed(context, '/home');
+        Navigator.pushReplacementNamed(context, '/home');
         break;
       case AuthState.error:
         ScaffoldMessenger.of(context)

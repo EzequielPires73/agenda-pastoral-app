@@ -38,10 +38,9 @@ class _LoginAdminPageState extends State<LoginAdminPage> {
     AuthState state = controller.state;
     switch (state) {
       case AuthState.idle:
-        print('Estado: Idle');
         break;
       case AuthState.success:
-        Navigator.pushNamed(context, '/admin/home');
+        Navigator.pushReplacementNamed(context, '/admin/home');
         break;
       case AuthState.error:
         ScaffoldMessenger.of(context)

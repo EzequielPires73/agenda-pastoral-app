@@ -1,9 +1,11 @@
+import 'package:agenda_pastora_app/models/available_time.dart';
 import 'package:agenda_pastora_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CustomCalendar extends StatefulWidget {
-  const CustomCalendar({super.key});
+  final List<AvailableTime> availableTimes;
+  const CustomCalendar({super.key, required this.availableTimes});
 
   @override
   State<CustomCalendar> createState() => _CustomCalendarState();
@@ -15,7 +17,13 @@ class _CustomCalendarState extends State<CustomCalendar> {
   DateTime? _selectedDay = DateTime.now();
 
   bool _isDisabled(DateTime day) {
-    return day.year == 2024 && day.month == 1 && day.day != 18;
+    return !widget.availableTimes.any((availableTime) =>
+        DateTime.parse(availableTime.date).isAtSameMomentAs(DateTime(day.year, day.month, day.day)));
+  }
+
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override
@@ -52,13 +60,13 @@ class _CustomCalendarState extends State<CustomCalendar> {
           todayTextStyle: TextStyle(
             color: ColorPalette.primary,
           ),
-          disabledDecoration: BoxDecoration(
+          /* disabledDecoration: BoxDecoration(
             color: ColorPalette.redLight,
             shape: BoxShape.circle,
           ),
           disabledTextStyle: TextStyle(
             color: ColorPalette.red,
-          ),
+          ), */
           selectedDecoration: BoxDecoration(
             color: ColorPalette.primary,
             shape: BoxShape.circle,

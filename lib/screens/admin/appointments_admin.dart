@@ -39,7 +39,7 @@ class _AppointmentsAdminPageState extends State<AppointmentsAdminPage> {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(16),
                   ),
-                  child: const CustomCalendar(),
+                  child: const CustomCalendar(availableTimes: []),
                 ),
               ],
             ),

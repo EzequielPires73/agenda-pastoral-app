@@ -5,6 +5,7 @@ import 'package:agenda_pastora_app/widgets/cards/card-appointments-user.dart';
 import 'package:agenda_pastora_app/widgets/header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -15,25 +16,24 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final AppointmentRepository _repository = AppointmentRepository();
-  final active = 1;
+  var active = 0;
   List<Appointment> appointments = [];
+  List<Appointment> history = [];
   
-  setResults(int index) {
-    /* if(index == 0) {
-      setState(() {
-        agendamentos = [AppointmentStatus.confirmado, AppointmentStatus.pendente, AppointmentStatus.pendente, AppointmentStatus.pendente, AppointmentStatus.confirmado, AppointmentStatus.pendente];
-      });
-    } else {
-      setState(() {
-        agendamentos = [AppointmentStatus.finalizado, AppointmentStatus.declinado,];
-      });
-    } */
+  setActive(int index) {
+    setState(() {
+      active = index;
+    });
   }
 
   Future<void> findAppointments() async {
-    var results = await _repository.findAppointments();
+    final shared = await SharedPreferences.getInstance();
+    final accessToken = shared.getString('member.access_token');
+    var resultsAppointments = await _repository.findAppointmentsByMember('pendente,confirmado', accessToken);
+    var resultsHistory = await _repository.findAppointmentsByMember('finalizado,declinado', accessToken);
     setState(() {
-      appointments = results;
+      appointments = resultsAppointments;
+      history = resultsHistory;
     });
   }
 
@@ -66,7 +66,7 @@ class _HomePageState extends State<HomePage> {
                 child: Column(
                   children: [
                     TabBar(
-                      onTap: (value) => setResults(value),
+                      onTap: (value) => setActive(value),
                       labelColor: ColorPalette.primary,
                       unselectedLabelColor: Colors.black38,
                       indicatorColor: ColorPalette.primary,
@@ -80,7 +80,7 @@ class _HomePageState extends State<HomePage> {
                       ],
                     ),
                     const SizedBox(height: 16,),
-                    ...appointments.map((e) => CardAppointmentsUser(appointment: e,)).toList(),
+                    active == 0 ? Column(children: [...appointments.map((e) => CardAppointmentsUser(appointment: e,)).toList(),],) : Column(children: [...history.map((e) => CardAppointmentsUser(appointment: e,)).toList(),],)
                   ],
                 ),
               ),

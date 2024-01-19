@@ -204,7 +204,6 @@ class CardAppointmentsUser extends StatelessWidget {
                     ? appointment.member.avatar
                     : null,
                 name: appointment.member.name,
-                color: Colors.white,
               )
             ],
           ),
@@ -229,7 +228,7 @@ class CardAppointmentsUser extends StatelessWidget {
               Expanded(
                 child: ButtonConfirm(
                     onPressed: () =>
-                        Navigator.pushNamed(context, '/details_appointments'),
+                        Navigator.pushNamed(context, '/details_appointments', arguments: {"id": appointment.id}),
                     title: 'Detalhes'),
               ),
             ],
@@ -240,7 +239,7 @@ class CardAppointmentsUser extends StatelessWidget {
   }
 
   String _formatDateTime(String date, String startTime, String endTime) {
-    final DateFormat dateFormat = DateFormat('MM/dd');
+    final DateFormat dateFormat = DateFormat('dd/MM');
     final DateFormat timeFormat = DateFormat('HH:mm');
 
     DateTime startDate = DateTime.parse(date);

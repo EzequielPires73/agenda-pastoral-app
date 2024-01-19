@@ -56,7 +56,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 path: '/choose_role',
                 title: 'Sair',
                 onAction: () async {
-                  Navigator.pushNamed(context, '/choose_role');
+                  Navigator.pushReplacementNamed(context, '/choose_role');
                   await value.logout();
                 }),
           )

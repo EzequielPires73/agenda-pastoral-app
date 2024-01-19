@@ -1,5 +1,7 @@
 import 'package:agenda_pastora_app/models/appointment_category.dart';
+import 'package:agenda_pastora_app/models/available_time.dart';
 import 'package:agenda_pastora_app/repositories/appointment_category_repository.dart';
+import 'package:agenda_pastora_app/repositories/available_time_repository.dart';
 import 'package:agenda_pastora_app/utils/colors.dart';
 import 'package:agenda_pastora_app/widgets/buttons/button_cancel.dart';
 import 'package:agenda_pastora_app/widgets/buttons/button_confirm.dart';
@@ -17,17 +19,27 @@ class CreateAppointmentsPage extends StatefulWidget {
 }
 
 class _CreateAppointmentsPageState extends State<CreateAppointmentsPage> {
-  DateTime date = DateTime.now();
+  final AvailableTimeRepository _availableTimeRepository = AvailableTimeRepository();
+  List<AvailableTime> availableTimes = [];
   final AppointmentCategoryRepository categoryRepository =
       AppointmentCategoryRepository();
   late final List<AppointmentCategory> categories;
   final TextEditingController observation = TextEditingController();
+  DateTime date = DateTime.now();
   AppointmentCategory? category;
   int? time;
+
+  Future<void> findAvailableTimes() async {
+    List<AvailableTime> res = await _availableTimeRepository.findAll();
+    setState(() {
+      availableTimes = res;
+    });
+  }
 
   @override
   void initState() {
     categories = categoryRepository.categories;
+    findAvailableTimes();
     super.initState();
   }
 
@@ -44,8 +56,8 @@ class _CreateAppointmentsPageState extends State<CreateAppointmentsPage> {
         ),
       ),
       body: CustomScrollView(slivers: [
-        const SliverToBoxAdapter(
-          child: CustomCalendar(),
+        SliverToBoxAdapter(
+          child: CustomCalendar(availableTimes: availableTimes),
         ),
         SliverToBoxAdapter(
           child: Container(
