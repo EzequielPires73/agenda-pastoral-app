@@ -143,7 +143,7 @@ class _CreateAppointmentsPageState extends State<CreateAppointmentsPage> {
               ),
               SliverPadding(
                 padding: const EdgeInsets.symmetric(horizontal: 25),
-                sliver: controller.appointmentsCategories.isNotEmpty
+                sliver: controller.appointmentsCategories.isNotEmpty && controller.category != null
                     ? SliverGrid.count(
                         crossAxisCount: 4,
                         childAspectRatio: 2,
@@ -180,7 +180,7 @@ class _CreateAppointmentsPageState extends State<CreateAppointmentsPage> {
                           ),
                         ),
                       )
-                    : const SliverToBoxAdapter(),
+                    : const SliverToBoxAdapter(child: Text('Selecione um motivo do agendamento'),),
               ),
               SliverToBoxAdapter(
                 child: Container(

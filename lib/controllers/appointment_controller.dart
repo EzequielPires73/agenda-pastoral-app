@@ -25,9 +25,12 @@ class AppointmentController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void changeDateSelected(DateTime selected, DateTime focused) {
+  Future<void> changeDateSelected(DateTime selected, DateTime focused) async {
     selectedDay = selected;
     focusedDay = focused;
+    if (category != null) {
+      await loadAvaibleTimes(category!);
+    }
     notifyListeners();
   }
 
@@ -39,11 +42,8 @@ class AppointmentController extends ChangeNotifier {
   }
 
   Future<void> loadAvaibleTimes(AppointmentCategory appointmentCategory) async {
-    if (category != null) {
-      times = await _appointmentCategoryRepository.findTimes(
-          appointmentCategory, focusedDay);
-      print(times[0].start);
-      notifyListeners();
-    }
+    times = await _appointmentCategoryRepository.findTimes(
+        appointmentCategory, focusedDay);
+    notifyListeners();
   }
 }

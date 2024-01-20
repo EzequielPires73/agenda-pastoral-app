@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  final baseUrl = 'http://192.168.0.104:8080/';
+  final baseUrl = 'http://192.168.0.110:8080/';
 
   Future<Map<String, dynamic>> get(String path, Map<String, String>? headers) async {
     var response = await http.get(Uri.parse(baseUrl + path), headers: headers);
