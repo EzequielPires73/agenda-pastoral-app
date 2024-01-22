@@ -18,4 +18,13 @@ class AppointmentCategory {
       slug: json['slug']
     );
   }
+
+  toJson() {
+    return {
+      "id": id,
+      "name": name,
+      "duration": duration,
+      "slug": slug
+    };
+  }
 }

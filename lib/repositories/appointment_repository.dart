@@ -1,12 +1,16 @@
+import 'dart:convert';
+
 import 'package:agenda_pastora_app/models/appointment.dart';
 import 'package:agenda_pastora_app/services/api_service.dart';
 
 class AppointmentRepository {
   final ApiService _apiService = ApiService();
 
-  Future<List<Appointment>> findAppointmentsByMember(String status, String? token) async {
+  Future<List<Appointment>> findAppointmentsByMember(
+      String status, String? token) async {
     try {
-      var res = await _apiService.get('appointments/me?status=$status', {"authorization": "Bearer $token"});
+      var res = await _apiService.get(
+          'appointments/me?status=$status', {"authorization": "Bearer $token"});
 
       if (res['success']) {
         var results = res['results'] as List;
@@ -26,13 +30,30 @@ class AppointmentRepository {
     try {
       var res = await _apiService.get('appointments/$id', null);
 
-      if(res['success']) {
+      if (res['success']) {
         Appointment appointment = Appointment.fromJson(res['result']);
 
         return appointment;
       } else {
         return null;
       }
+    } catch (error) {
+      return null;
+    }
+  }
+
+  Future<Appointment?> create(Appointment appointment, String? token) async {
+    try {
+      var res = await _apiService.post(
+        'appointments',
+        json.encode(appointment),
+        {"authorization": "Bearer $token"},
+      );
+      if (res['success']) {
+        Appointment appointment = Appointment.fromJson(res['result']);
+        return appointment;
+      }
+      return null;
     } catch (error) {
       return null;
     }

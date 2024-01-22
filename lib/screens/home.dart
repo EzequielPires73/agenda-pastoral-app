@@ -19,7 +19,7 @@ class _HomePageState extends State<HomePage> {
   var active = 0;
   List<Appointment> appointments = [];
   List<Appointment> history = [];
-  
+
   setActive(int index) {
     setState(() {
       active = index;
@@ -29,12 +29,28 @@ class _HomePageState extends State<HomePage> {
   Future<void> findAppointments() async {
     final shared = await SharedPreferences.getInstance();
     final accessToken = shared.getString('member.access_token');
-    var resultsAppointments = await _repository.findAppointmentsByMember('pendente,confirmado', accessToken);
-    var resultsHistory = await _repository.findAppointmentsByMember('finalizado,declinado', accessToken);
+    var resultsAppointments = await _repository.findAppointmentsByMember(
+        'pendente,confirmado', accessToken);
+    var resultsHistory = await _repository.findAppointmentsByMember(
+        'finalizado,declinado', accessToken);
     setState(() {
       appointments = resultsAppointments;
       history = resultsHistory;
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    findAppointments();
+  }
+
+  @override
+  void didUpdateWidget(covariant HomePage oldWidget) {
+    // TODO: implement didUpdateWidget
+    super.didUpdateWidget(oldWidget);
+    print('voltou');
   }
 
   @override
@@ -43,49 +59,77 @@ class _HomePageState extends State<HomePage> {
     super.initState();
   }
 
+
+  Future<void> _refresh() async {
+    findAppointments();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const Header(),
-            Container(
-              width: double.infinity,
-              transform: Matrix4.translationValues(0, -16, 0),
-              padding: const EdgeInsets.symmetric(
-                horizontal: 25,
-                vertical: 32,
-              ),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: DefaultTabController(
-                length: 2,
-                child: Column(
-                  children: [
-                    TabBar(
-                      onTap: (value) => setActive(value),
-                      labelColor: ColorPalette.primary,
-                      unselectedLabelColor: Colors.black38,
-                      indicatorColor: ColorPalette.primary,
-                      tabs: const [
-                        Tab(
-                          text: 'Agendamentos',
-                        ),
-                        Tab(
-                          text: 'Histórico',
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16,),
-                    active == 0 ? Column(children: [...appointments.map((e) => CardAppointmentsUser(appointment: e,)).toList(),],) : Column(children: [...history.map((e) => CardAppointmentsUser(appointment: e,)).toList(),],)
-                  ],
+      body: RefreshIndicator(
+        onRefresh: _refresh,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const Header(),
+              Container(
+                width: double.infinity,
+                transform: Matrix4.translationValues(0, -16, 0),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 25,
+                  vertical: 32,
                 ),
-              ),
-            )
-          ],
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: DefaultTabController(
+                  length: 2,
+                  child: Column(
+                    children: [
+                      TabBar(
+                        onTap: (value) => setActive(value),
+                        labelColor: ColorPalette.primary,
+                        unselectedLabelColor: Colors.black38,
+                        indicatorColor: ColorPalette.primary,
+                        tabs: const [
+                          Tab(
+                            text: 'Agendamentos',
+                          ),
+                          Tab(
+                            text: 'Histórico',
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 16,
+                      ),
+                      active == 0
+                          ? Column(
+                              children: [
+                                ...appointments
+                                    .map((e) => CardAppointmentsUser(
+                                          appointment: e,
+                                        ))
+                                    .toList(),
+                              ],
+                            )
+                          : Column(
+                              children: [
+                                ...history
+                                    .map((e) => CardAppointmentsUser(
+                                          appointment: e,
+                                        ))
+                                    .toList(),
+                              ],
+                            )
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       ),
       floatingActionButton: Container(

@@ -25,14 +25,16 @@ class AppointmentCategoryRepository {
     }
   }
 
-  Future<List<Time>> findTimes(AppointmentCategory category, DateTime date) async {
+  Future<List<Time>> findTimes(
+      AppointmentCategory category, DateTime date) async {
     try {
-      var res = await _apiService.get('appointments-categories/avaible-times/${category.id}?date=${_formatDate(date)}', null);
-
+      var res = await _apiService.get(
+          'appointments-categories/avaible-times/${category.id}?date=${_formatDate(date)}',
+          null);
+          
       if (res['success']) {
         var results = res['results'] as List;
-        List<Time> times =
-            results.map((e) => Time.fromJson(e)).toList();
+        List<Time> times = results.map((e) => Time.fromJson(e)).toList();
 
         return times;
       } else {

@@ -38,4 +38,13 @@ class Member extends UserAbstract {
       notificationToken: json['notificationToken'],
     );
   }
+
+  toJson() {
+    return {
+      "id": id,
+      "name": name,
+      "email": email,
+      "phone": phone
+    };
+  }
 }

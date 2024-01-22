@@ -3,7 +3,7 @@ import 'package:agenda_pastora_app/models/member.dart';
 import 'package:agenda_pastora_app/models/user.dart';
 
 class Appointment {
-  int id;
+  int? id;
   AppointmentCategory category;
   String date;
   String observation;
@@ -14,7 +14,6 @@ class Appointment {
   User? responsible;
 
   Appointment({
-    required this.id,
     required this.category,
     required this.date,
     required this.observation,
@@ -23,6 +22,7 @@ class Appointment {
     required this.status,
     required this.member,
     this.responsible,
+    this.id,
   });
 
   factory Appointment.fromJson(Map<String, dynamic> json) {
@@ -36,5 +36,17 @@ class Appointment {
       status: json['status'],
       member: Member.fromJson(json['member']),
     );
+  }
+  
+  toJson() {
+    return {
+      "category": category.toJson(),
+      "date": date,
+      "observation": observation,
+      "start": start,
+      "end": end,
+      "status": status,
+      "member": member.toJson(),
+    };
   }
 }

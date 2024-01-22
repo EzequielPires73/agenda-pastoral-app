@@ -21,6 +21,7 @@ void main() async {
 
   runApp(MultiProvider(
     providers: [
+      ChangeNotifierProvider(create: (context) => AppointmentController(),),
       Provider<NotificationService>(
         create: (context) => NotificationService(),
       ),
@@ -31,7 +32,6 @@ void main() async {
       ChangeNotifierProvider(
         create: (context) => AuthController(),
       ),
-      ChangeNotifierProvider(create: (context) => AppointmentController(),)
     ],
     child: const App(),
   ));
