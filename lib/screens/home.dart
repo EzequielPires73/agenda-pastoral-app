@@ -40,25 +40,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
-  void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
-    super.didChangeDependencies();
-    findAppointments();
-  }
-
-  @override
-  void didUpdateWidget(covariant HomePage oldWidget) {
-    // TODO: implement didUpdateWidget
-    super.didUpdateWidget(oldWidget);
-    print('voltou');
-  }
-
-  @override
   void initState() {
     findAppointments();
     super.initState();
   }
-
 
   Future<void> _refresh() async {
     findAppointments();
@@ -139,9 +124,9 @@ class _HomePageState extends State<HomePage> {
             color: ColorPalette.primary,
             borderRadius: BorderRadius.circular(4)),
         child: IconButton(
-          icon: Icon(FeatherIcons.plus),
+          icon: const Icon(FeatherIcons.plus),
           color: Colors.white,
-          onPressed: () => Navigator.pushNamed(context, '/create_appointments'),
+          onPressed: () => Navigator.pushReplacementNamed(context, '/create_appointments'),
         ),
       ),
     );

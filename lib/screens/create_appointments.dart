@@ -11,6 +11,7 @@ import 'package:agenda_pastora_app/widgets/calendar.dart';
 import 'package:agenda_pastora_app/widgets/form_components/text_field_primary.dart';
 import 'package:agenda_pastora_app/widgets/header.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -54,6 +55,7 @@ class _CreateAppointmentsPageState extends State<CreateAppointmentsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(icon: const Icon(FeatherIcons.arrowLeft), onPressed: () => Navigator.pushReplacementNamed(context, '/home'),),
         backgroundColor: ColorPalette.primary,
         iconTheme: const IconThemeData(color: Colors.white),
         toolbarHeight: 80,

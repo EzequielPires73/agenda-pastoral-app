@@ -53,13 +53,16 @@ class _DetailsAppointmentsState extends State<DetailsAppointments> {
           backgroundColor: ColorPalette.primary,
           iconTheme: const IconThemeData(color: Colors.white),
           toolbarHeight: 80,
+          leading: IconButton(icon: const Icon(FeatherIcons.arrowLeft), onPressed: () => Navigator.pushReplacementNamed(context, '/home'),),
           title: const Text(
             'Agendamento',
             style: TextStyle(color: Colors.white),
           ),
         ),
         body: isLoading == true
-            ? Center(child: CircularProgressIndicator(),)
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
             : SingleChildScrollView(
                 child: Padding(
                   padding:
@@ -131,7 +134,7 @@ class _DetailsAppointmentsState extends State<DetailsAppointments> {
                             const SizedBox(
                               height: 24,
                             ),
-                            Column(
+                            appointment?.observation.isEmpty != true ? Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Text(
@@ -154,7 +157,7 @@ class _DetailsAppointmentsState extends State<DetailsAppointments> {
                                   child: Text(appointment!.observation),
                                 )
                               ],
-                            ),
+                            ) : Container(),
                             const SizedBox(height: 32),
                             Column(
                               children: [
