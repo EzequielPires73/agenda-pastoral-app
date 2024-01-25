@@ -29,6 +29,7 @@ class _CreateAppointmentsPageState extends State<CreateAppointmentsPage> {
   List<AppointmentCategory> appointmentsCategories = [];
   AppointmentCategory? category;
   int? time;
+  bool loading = true;
 
   _successListener() {
     if (controller.state == AppointmentState.success) {
@@ -37,12 +38,19 @@ class _CreateAppointmentsPageState extends State<CreateAppointmentsPage> {
     }
   }
 
+  Future<void> _loadInitialValues() async {
+    await controller.loadInitialValues();
+    setState(() {
+      loading = false;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     controller = context.read<AppointmentController>();
-    controller.loadInitialValues();
     controller.addListener(_successListener);
+    _loadInitialValues();
   }
 
   @override
@@ -55,7 +63,6 @@ class _CreateAppointmentsPageState extends State<CreateAppointmentsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(icon: const Icon(FeatherIcons.arrowLeft), onPressed: () => Navigator.pushReplacementNamed(context, '/home'),),
         backgroundColor: ColorPalette.primary,
         iconTheme: const IconThemeData(color: Colors.white),
         toolbarHeight: 80,

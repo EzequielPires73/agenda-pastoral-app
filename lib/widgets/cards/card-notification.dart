@@ -1,39 +1,45 @@
+import 'package:agenda_pastora_app/controllers/auth_controller.dart';
+import 'package:agenda_pastora_app/models/notification.dart';
+import 'package:agenda_pastora_app/models/user.dart';
 import 'package:agenda_pastora_app/widgets/avatar.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CardNotification extends StatelessWidget {
-  const CardNotification({super.key});
+  final AppointmentNotification notification;
+
+  const CardNotification({super.key, required this.notification});
 
   @override
   Widget build(BuildContext context) {
+    UserAbstract? user = notification.destination == 'user' ? notification.member : notification.user;
     return InkWell(
-      onTap: () => Navigator.pushNamed(context, '/details_appointments'),
-      child: Container(
+      onTap: () => notification.appointment != null ? Navigator.pushNamed(context, '/details_appointments', arguments: {"id": notification.appointment?.id}) : null,
+      child: SizedBox(
         child: Row(
           children: [
-            const Avatar(
-              image: 'https://avatars.githubusercontent.com/u/145378534?v=4',
-              name: 'Notificação',
+            Avatar(
+              image: user?.avatar,
+              name: user?.name ?? 'AD Catalão',
             ),
             const SizedBox(
               width: 16,
             ),
             Expanded(
-              child: RichText(
-                text: TextSpan(
-                  style: DefaultTextStyle.of(context).style,
-                  children: const [
-                    TextSpan(
-                      text: 'Ezequiel Pires',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                    ),
-                    TextSpan(
-                      text:
-                          ' Marcou um agendamento Pastoral no dia 17/01 às 09:00',
-                    ),
-                  ],
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    notification.title,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                  Text(
+                    notification.body,
+                    style: const TextStyle(
+                        fontSize: 12, fontWeight: FontWeight.w500),
+                  ),
+                ],
               ),
             ),
           ],

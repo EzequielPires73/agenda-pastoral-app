@@ -1,3 +1,5 @@
+import 'package:agenda_pastora_app/helpers/date.dart';
+import 'package:agenda_pastora_app/helpers/status.dart';
 import 'package:agenda_pastora_app/models/appointment.dart';
 import 'package:agenda_pastora_app/utils/colors.dart';
 import 'package:agenda_pastora_app/widgets/avatar.dart';
@@ -15,80 +17,13 @@ enum AppointmentStatus {
 
 class CardAppointmentsUser extends StatelessWidget {
   final Appointment appointment;
-  const CardAppointmentsUser({super.key, required this.appointment});
-
-  getColor() {
-    Color color;
-    switch (appointment.status) {
-      case 'confirmado':
-        color = ColorPalette.green;
-        break;
-      case 'pendente':
-        color = ColorPalette.primary;
-        break;
-      case 'finalizado':
-        color = ColorPalette.blue;
-        break;
-      case 'declinado':
-        color = ColorPalette.red;
-        break;
-
-      default:
-        color = ColorPalette.primary;
-    }
-
-    return color;
-  }
-
-  getBackground() {
-    Color color;
-    switch (appointment.status) {
-      case 'confirmado':
-        color = ColorPalette.greenLight;
-        break;
-      case 'pendente':
-        color = ColorPalette.primaryLight;
-        break;
-      case 'finalizado':
-        color = ColorPalette.blueLight;
-        break;
-      case 'declinado':
-        color = ColorPalette.redLight;
-        break;
-
-      default:
-        color = ColorPalette.primary;
-    }
-
-    return color;
-  }
-
-  getStatusText() {
-    String title;
-    switch (appointment.status) {
-      case 'confirmado':
-        title = 'Confirmado';
-        break;
-      case 'pendente':
-        title = 'Pendente';
-        break;
-      case 'finalizado':
-        title = 'Finalizado';
-        break;
-      case 'declinado':
-        title = 'Declinado';
-        break;
-
-      default:
-        title = 'Pendente';
-    }
-
-    return title;
-  }
+  final Function() onPress;
+  const CardAppointmentsUser(
+      {super.key, required this.appointment, required this.onPress});
 
   @override
   Widget build(BuildContext context) {
-    Future<void> _showMyDialog() async {
+    Future<void> showMyDialog() async {
       return showDialog<void>(
         context: context,
         barrierDismissible: false, // user must tap button!
@@ -137,7 +72,7 @@ class CardAppointmentsUser extends StatelessWidget {
       surfaceTintColor: Colors.white,
       margin: const EdgeInsets.only(bottom: 16),
       child: Container(
-        padding: EdgeInsets.all(12),
+        padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
             border: Border.all(color: const Color(0xffDDDDDD), width: 1),
             borderRadius: BorderRadius.circular(8)),
@@ -153,14 +88,15 @@ class CardAppointmentsUser extends StatelessWidget {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                        color: getBackground(),
+                        color: getBackground(appointment.status),
                         borderRadius: BorderRadius.circular(4)),
                     child: Text(
-                      getStatusText(),
+                      getStatusText(appointment.status),
                       style: TextStyle(
-                          color: getColor(),
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500),
+                        color: getColor(appointment.status),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
                   const SizedBox(
@@ -176,9 +112,9 @@ class CardAppointmentsUser extends StatelessWidget {
                   const SizedBox(
                     height: 4,
                   ),
-                  const Text(
-                    'Pr. Cornélio Neto ',
-                    style: TextStyle(
+                  Text(
+                    appointment.responsible?.name ?? '',
+                    style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                         color: ColorPalette.gray5),
@@ -187,7 +123,7 @@ class CardAppointmentsUser extends StatelessWidget {
                     height: 4,
                   ),
                   Text(
-                    _formatDateTime(
+                    formatDateTime(
                         appointment.date, appointment.start, appointment.end),
                     style: const TextStyle(
                         fontSize: 14,
@@ -200,10 +136,10 @@ class CardAppointmentsUser extends StatelessWidget {
                 ],
               ),
               Avatar(
-                image: appointment.member.avatar?.isNotEmpty == true
-                    ? appointment.member.avatar
+                image: appointment.responsible?.avatar?.isNotEmpty == true
+                    ? appointment.responsible?.avatar
                     : null,
-                name: appointment.member.name,
+                name: appointment.responsible?.name ?? '',
               )
             ],
           ),
@@ -216,7 +152,7 @@ class CardAppointmentsUser extends StatelessWidget {
                       appointment.status == 'pendente'
                   ? Expanded(
                       child: ButtonCancel(
-                          onPressed: _showMyDialog, title: 'Cancelar'),
+                          onPressed: showMyDialog, title: 'Cancelar'),
                     )
                   : Container(),
               SizedBox(
@@ -227,8 +163,12 @@ class CardAppointmentsUser extends StatelessWidget {
               ),
               Expanded(
                 child: ButtonConfirm(
-                    onPressed: () =>
-                        Navigator.pushNamed(context, '/details_appointments', arguments: {"id": appointment.id}),
+                    onPressed: () async {
+                      await Navigator.pushNamed(
+                          context, '/details_appointments',
+                          arguments: {"id": appointment.id});
+                      onPress();
+                    },
                     title: 'Detalhes'),
               ),
             ],
@@ -236,19 +176,5 @@ class CardAppointmentsUser extends StatelessWidget {
         ]),
       ),
     );
-  }
-
-  String _formatDateTime(String date, String startTime, String endTime) {
-    final DateFormat dateFormat = DateFormat('dd/MM');
-    final DateFormat timeFormat = DateFormat('HH:mm');
-
-    DateTime startDate = DateTime.parse(date);
-    String formattedDate = dateFormat.format(startDate);
-    String formattedStartTime =
-        timeFormat.format(DateTime.parse('2000-01-01 $startTime'));
-    String formattedEndTime =
-        timeFormat.format(DateTime.parse('2000-01-01 $endTime'));
-
-    return '$formattedDate - $formattedStartTime - $formattedEndTime';
   }
 }

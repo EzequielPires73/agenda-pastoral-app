@@ -25,6 +25,7 @@ class AppointmentController extends ChangeNotifier {
   List<AppointmentCategory> appointmentsCategories = [];
   List<Time> times = [];
 
+  List<Appointment> appointments = [];
   Appointment? appointment;
   TextEditingController observation = TextEditingController();
   AppointmentCategory? category;
@@ -33,8 +34,6 @@ class AppointmentController extends ChangeNotifier {
   DateTime selectedDay = DateTime.now();
 
   Future<void> loadInitialValues() async {
-    state = AppointmentState.loadding;
-    notifyListeners();
     try {
       availableTimes = await _availableTimeRepository.findAll();
       appointmentsCategories = await _appointmentCategoryRepository.findAll();
@@ -81,6 +80,22 @@ class AppointmentController extends ChangeNotifier {
       state = AppointmentState.idle;
       notifyListeners();
     }
+  }
+
+  Future<void> findAppointments() async {
+    try {
+      state = AppointmentState.loadding;
+      notifyListeners();
+      final shared = await SharedPreferences.getInstance();
+      final accessToken = shared.getString('access_token');
+      await Future.delayed(const Duration(seconds: 3));
+      appointments =
+          await _appointmentRepository.findAll('pendente', accessToken, null);
+      state = AppointmentState.idle;
+    } catch (error) {
+      state = AppointmentState.error;
+    }
+    notifyListeners();
   }
 
   Future<void> createAppointment() async {

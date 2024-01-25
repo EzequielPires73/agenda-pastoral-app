@@ -41,8 +41,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    findAppointments();
     super.initState();
+    findAppointments();
   }
 
   Future<void> _refresh() async {
@@ -96,6 +96,7 @@ class _HomePageState extends State<HomePage> {
                                 ...appointments
                                     .map((e) => CardAppointmentsUser(
                                           appointment: e,
+                                          onPress: _refresh,
                                         ))
                                     .toList(),
                               ],
@@ -105,6 +106,7 @@ class _HomePageState extends State<HomePage> {
                                 ...history
                                     .map((e) => CardAppointmentsUser(
                                           appointment: e,
+                                          onPress: _refresh,
                                         ))
                                     .toList(),
                               ],
@@ -126,7 +128,10 @@ class _HomePageState extends State<HomePage> {
         child: IconButton(
           icon: const Icon(FeatherIcons.plus),
           color: Colors.white,
-          onPressed: () => Navigator.pushReplacementNamed(context, '/create_appointments'),
+          onPressed: () async {
+            await Navigator.pushNamed(context, '/create_appointments');
+            _refresh();
+          },
         ),
       ),
     );

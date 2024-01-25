@@ -1,3 +1,6 @@
+import 'package:agenda_pastora_app/controllers/auth_controller.dart';
+import 'package:agenda_pastora_app/helpers/date.dart';
+import 'package:agenda_pastora_app/helpers/status.dart';
 import 'package:agenda_pastora_app/models/appointment.dart';
 import 'package:agenda_pastora_app/repositories/appointment_repository.dart';
 import 'package:agenda_pastora_app/utils/colors.dart';
@@ -6,9 +9,11 @@ import 'package:agenda_pastora_app/widgets/buttons/button_cancel.dart';
 import 'package:agenda_pastora_app/widgets/buttons/button_confirm.dart';
 import 'package:agenda_pastora_app/widgets/buttons/button_primary.dart';
 import 'package:agenda_pastora_app/widgets/buttons/button_secondary.dart';
+import 'package:agenda_pastora_app/widgets/custom_alert_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class DetailsAppointments extends StatefulWidget {
   const DetailsAppointments({super.key});
@@ -24,8 +29,14 @@ class _DetailsAppointmentsState extends State<DetailsAppointments> {
   bool isLoading = true;
 
   Future<void> findAppointment(int id) async {
+    if (isLoading == false) {
+      setState(() {
+        isLoading = true;
+      });
+    }
     var res = await _repository.findOne(id);
     setState(() {
+      appointmentId = res?.id;
       appointment = res;
       isLoading = false;
     });
@@ -53,7 +64,6 @@ class _DetailsAppointmentsState extends State<DetailsAppointments> {
           backgroundColor: ColorPalette.primary,
           iconTheme: const IconThemeData(color: Colors.white),
           toolbarHeight: 80,
-          leading: IconButton(icon: const Icon(FeatherIcons.arrowLeft), onPressed: () => Navigator.pushReplacementNamed(context, '/home'),),
           title: const Text(
             'Agendamento',
             style: TextStyle(color: Colors.white),
@@ -110,7 +120,7 @@ class _DetailsAppointmentsState extends State<DetailsAppointments> {
                                     const SizedBox(
                                       width: 16,
                                     ),
-                                    Text(_formatDate(appointment!.date))
+                                    Text(formatDate(appointment!.date))
                                   ],
                                 ),
                                 const SizedBox(
@@ -126,7 +136,7 @@ class _DetailsAppointmentsState extends State<DetailsAppointments> {
                                       width: 16,
                                     ),
                                     Text(
-                                        '${_formatTime(appointment!.start)} - ${_formatTime(appointment!.end)}')
+                                        '${formatTime(appointment!.start)} - ${formatTime(appointment!.end)}')
                                   ],
                                 ),
                               ],
@@ -134,175 +144,101 @@ class _DetailsAppointmentsState extends State<DetailsAppointments> {
                             const SizedBox(
                               height: 24,
                             ),
-                            appointment?.observation.isEmpty != true ? Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'Observação',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w500,
-                                    color: ColorPalette.gray3,
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 8,
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.all(12),
-                                  decoration: BoxDecoration(
-                                      border: Border.all(
-                                          color: Color(0xffdddddd), width: 1),
-                                      borderRadius: BorderRadius.circular(8)),
-                                  child: Text(appointment!.observation),
-                                )
-                              ],
-                            ) : Container(),
+                            appointment?.observation.isEmpty != true
+                                ? Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Text(
+                                        'Observação',
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w500,
+                                          color: ColorPalette.gray3,
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 8,
+                                      ),
+                                      Container(
+                                        width: double.infinity,
+                                        padding: const EdgeInsets.all(12),
+                                        decoration: BoxDecoration(
+                                            border: Border.all(
+                                                color: const Color(0xffdddddd),
+                                                width: 1),
+                                            borderRadius:
+                                                BorderRadius.circular(8)),
+                                        child: Text(appointment!.observation),
+                                      )
+                                    ],
+                                  )
+                                : Container(),
                             const SizedBox(height: 32),
                             Column(
                               children: [
-                                ButtonPrimary(
-                                  onPressed: () => {},
-                                  title: 'Alterar agendamento',
+                                Consumer<AuthController>(
+                                  builder: (context, value, child) {
+                                    if (value.user != null &&
+                                        appointment!.status == 'pendente') {
+                                      return ButtonPrimary(
+                                        onPressed: _showMyDialogConfirm,
+                                        title: 'Confirmar agendamento',
+                                      );
+                                    } else if (value.member != null) {
+                                      ButtonPrimary(
+                                        onPressed: () => {},
+                                        title: 'Alterar agendamento',
+                                      );
+                                    }
+                                    return Container();
+                                  },
                                 ),
                                 const SizedBox(
                                   height: 16,
                                 ),
-                                ButtonSecondary(
-                                  onPressed: _showMyDialog,
+                                appointment!.status == 'pendente' || appointment!.status == 'confirmado' ?  ButtonSecondary(
+                                  onPressed: _showMyDialogCancel,
                                   title: 'Cancelar agendamento',
-                                ),
+                                ) : Container(),
                               ],
                             ),
                           ],
                         )
-                      : Text('Encontro não foi encontrado.'),
+                      : const Text('Compromisso não foi encontrado.'),
                 ),
               ));
   }
 
-  Future<void> _showMyDialog() async {
+  Future<void> _showMyDialogCancel() async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: Colors.white,
-          surfaceTintColor: Colors.white,
-          title: const Text(
-            'Cancelar Agendamento',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-          ),
-          content: const SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text('Deseja mesmo cancelar o agendamento?'),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            Row(
-              children: [
-                Expanded(
-                  child: ButtonCancel(
-                      onPressed: () => Navigator.of(context).pop(),
-                      title: 'Cancelar'),
-                ),
-                const SizedBox(
-                  width: 8,
-                ),
-                Expanded(
-                  child: ButtonConfirm(
-                      onPressed: () => Navigator.of(context).pop(),
-                      title: 'Confirmar'),
-                ),
-              ],
-            ),
-          ],
-        );
+        return CustomAlertDialog(
+            title: 'Cancelar Agendamento',
+            subtitle: 'Deseja mesmo cancelar o agendamento?',
+            onChange: () async {
+              await _repository.updateStatus(appointmentId!, 'declinado');
+              await findAppointment(appointmentId!);
+            });
       },
     );
   }
 
-  String _formatDate(String date) {
-    final DateFormat dateFormat = DateFormat('dd/MM');
-    String formattedDate = dateFormat.format(DateTime.parse(date));
-    return formattedDate;
-  }
-
-  String _formatTime(String time) {
-    final DateFormat timeFormat = DateFormat('HH:mm');
-    String formattedTime =
-        timeFormat.format(DateTime.parse('2000-01-01 $time'));
-    return formattedTime;
-  }
-
-  getStatusText(String status) {
-    String title;
-    switch (status) {
-      case 'confirmado':
-        title = 'Confirmado';
-        break;
-      case 'pendente':
-        title = 'Pendente';
-        break;
-      case 'finalizado':
-        title = 'Finalizado';
-        break;
-      case 'declinado':
-        title = 'Declinado';
-        break;
-
-      default:
-        title = 'Pendente';
-    }
-
-    return title;
-  }
-
-  getColor(status) {
-    Color color;
-    switch (status) {
-      case 'confirmado':
-        color = ColorPalette.green;
-        break;
-      case 'pendente':
-        color = ColorPalette.primary;
-        break;
-      case 'finalizado':
-        color = ColorPalette.blue;
-        break;
-      case 'declinado':
-        color = ColorPalette.red;
-        break;
-
-      default:
-        color = ColorPalette.primary;
-    }
-
-    return color;
-  }
-
-  getBackground(status) {
-    Color color;
-    switch (status) {
-      case 'confirmado':
-        color = ColorPalette.greenLight;
-        break;
-      case 'pendente':
-        color = ColorPalette.primaryLight;
-        break;
-      case 'finalizado':
-        color = ColorPalette.blueLight;
-        break;
-      case 'declinado':
-        color = ColorPalette.redLight;
-        break;
-
-      default:
-        color = ColorPalette.primary;
-    }
-
-    return color;
+  Future<void> _showMyDialogConfirm() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return CustomAlertDialog(
+            title: 'Confirmar Agendamento',
+            subtitle: 'Deseja mesmo confirmar o agendamento?',
+            onChange: () async {
+              await _repository.updateStatus(appointmentId!, 'confirmado');
+              await findAppointment(appointmentId!);
+            });
+      },
+    );
   }
 }

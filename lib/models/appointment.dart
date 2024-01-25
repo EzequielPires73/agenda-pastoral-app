@@ -35,6 +35,7 @@ class Appointment {
       end: json['end'],
       status: json['status'],
       member: Member.fromJson(json['member']),
+      responsible: json['responsible'] != null ? User.fromJson(json['responsible']) : null
     );
   }
   

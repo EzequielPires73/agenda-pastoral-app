@@ -1,8 +1,13 @@
+import 'package:agenda_pastora_app/helpers/date.dart';
+import 'package:agenda_pastora_app/helpers/status.dart';
+import 'package:agenda_pastora_app/models/appointment.dart';
 import 'package:agenda_pastora_app/utils/colors.dart';
 import 'package:agenda_pastora_app/widgets/avatar.dart';
 import 'package:agenda_pastora_app/widgets/buttons/button_cancel.dart';
 import 'package:agenda_pastora_app/widgets/buttons/button_confirm.dart';
+import 'package:agenda_pastora_app/widgets/custom_alert_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 
 enum AppointmentStatus {
   pendente,
@@ -13,128 +18,22 @@ enum AppointmentStatus {
 }
 
 class CardAppointmentsAdmin extends StatelessWidget {
-  final AppointmentStatus status;
-  const CardAppointmentsAdmin({super.key, required this.status});
-
-  getColor() {
-    Color color;
-    switch (status) {
-      case AppointmentStatus.confirmado:
-        color = ColorPalette.green;
-        break;
-      case AppointmentStatus.lembrete:
-        color = ColorPalette.gray3;
-        break;
-      case AppointmentStatus.pendente:
-        color = ColorPalette.primary;
-        break;
-      case AppointmentStatus.finalizado:
-        color = ColorPalette.blue;
-        break;
-      case AppointmentStatus.declinado:
-        color = ColorPalette.red;
-        break;
-
-      default:
-        color = ColorPalette.primary;
-    }
-
-    return color;
-  }
-
-  getBackground() {
-    Color color;
-    switch (status) {
-      case AppointmentStatus.confirmado:
-        color = ColorPalette.greenLight;
-        break;
-      case AppointmentStatus.pendente:
-        color = ColorPalette.primaryLight;
-        break;
-      case AppointmentStatus.lembrete:
-        color = ColorPalette.input;
-        break;
-      case AppointmentStatus.finalizado:
-        color = ColorPalette.blueLight;
-        break;
-      case AppointmentStatus.declinado:
-        color = ColorPalette.redLight;
-        break;
-
-      default:
-        color = ColorPalette.primary;
-    }
-
-    return color;
-  }
-
-  getStatusText() {
-    String title;
-    switch (status) {
-      case AppointmentStatus.confirmado:
-        title = 'Confirmado';
-        break;
-      case AppointmentStatus.pendente:
-        title = 'Pendente';
-        break;
-      case AppointmentStatus.lembrete:
-        title = 'Lembrete';
-        break;
-      case AppointmentStatus.finalizado:
-        title = 'Finalizado';
-        break;
-      case AppointmentStatus.declinado:
-        title = 'Declinado';
-        break;
-
-      default:
-        title = 'Pendente';
-    }
-
-    return title;
-  }
+  final Appointment appointment;
+  final Function() onPress;
+  const CardAppointmentsAdmin(
+      {super.key, required this.appointment, required this.onPress});
 
   @override
   Widget build(BuildContext context) {
-    Future<void> _showMyDialog() async {
+    Future<void> showMyDialogCancel() async {
       return showDialog<void>(
         context: context,
         barrierDismissible: false, // user must tap button!
         builder: (BuildContext context) {
-          return AlertDialog(
-            backgroundColor: Colors.white,
-            surfaceTintColor: Colors.white,
-            title: const Text(
-              'Cancelar Agendamento',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-            ),
-            content: const SingleChildScrollView(
-              child: ListBody(
-                children: <Widget>[
-                  Text('Deseja mesmo cancelar o agendamento?'),
-                ],
-              ),
-            ),
-            actions: <Widget>[
-              Row(
-                children: [
-                  Expanded(
-                    child: ButtonCancel(
-                        onPressed: () => Navigator.of(context).pop(),
-                        title: 'Cancelar'),
-                  ),
-                  const SizedBox(
-                    width: 8,
-                  ),
-                  Expanded(
-                    child: ButtonConfirm(
-                        onPressed: () => Navigator.of(context).pop(),
-                        title: 'Confirmar'),
-                  ),
-                ],
-              ),
-            ],
-          );
+          return CustomAlertDialog(
+              title: 'Cancelar Agendamento',
+              subtitle: 'Deseja mesmo cancelar o agendamento?',
+              onChange: () {});
         },
       );
     }
@@ -143,9 +42,8 @@ class CardAppointmentsAdmin extends StatelessWidget {
       elevation: 0,
       color: Colors.white,
       surfaceTintColor: Colors.white,
-      margin: const EdgeInsets.only(bottom: 16),
       child: Container(
-        padding: EdgeInsets.all(12),
+        padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
             border: Border.all(color: const Color(0xffDDDDDD), width: 1),
             borderRadius: BorderRadius.circular(8)),
@@ -161,12 +59,12 @@ class CardAppointmentsAdmin extends StatelessWidget {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                        color: getBackground(),
+                        color: getBackground(appointment.status),
                         borderRadius: BorderRadius.circular(4)),
                     child: Text(
-                      getStatusText(),
+                      getStatusText(appointment.status),
                       style: TextStyle(
-                          color: getColor(),
+                          color: getColor(appointment.status),
                           fontSize: 14,
                           fontWeight: FontWeight.w500),
                     ),
@@ -174,9 +72,9 @@ class CardAppointmentsAdmin extends StatelessWidget {
                   const SizedBox(
                     height: 4,
                   ),
-                  const Text(
-                    'Aconselhamento Pastoral',
-                    style: TextStyle(
+                  Text(
+                    appointment.category.name,
+                    style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
                         color: ColorPalette.gray3),
@@ -184,9 +82,9 @@ class CardAppointmentsAdmin extends StatelessWidget {
                   const SizedBox(
                     height: 4,
                   ),
-                  const Text(
-                    'Ezequiel Pires',
-                    style: TextStyle(
+                  Text(
+                    appointment.member.name,
+                    style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                         color: ColorPalette.gray5),
@@ -194,9 +92,10 @@ class CardAppointmentsAdmin extends StatelessWidget {
                   const SizedBox(
                     height: 4,
                   ),
-                  const Text(
-                    '12/01 - 09:00',
-                    style: TextStyle(
+                  Text(
+                    formatDateTime(
+                        appointment.date, appointment.start, appointment.end),
+                    style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
                         color: ColorPalette.gray3),
@@ -206,9 +105,9 @@ class CardAppointmentsAdmin extends StatelessWidget {
                   ),
                 ],
               ),
-              const Avatar(
-                image: 'https://avatars.githubusercontent.com/u/145378534?v=4',
-                name: 'Ezequiel Pires',
+              Avatar(
+                image: appointment.member.avatar,
+                name: appointment.member.name,
               )
             ],
           ),
@@ -217,28 +116,139 @@ class CardAppointmentsAdmin extends StatelessWidget {
           ),
           Row(
             children: [
-              status == AppointmentStatus.confirmado ||
-                      status == AppointmentStatus.pendente
+              appointment.status == 'confirmado' ||
+                      appointment.status == 'pendente'
                   ? Expanded(
                       child: ButtonCancel(
-                          onPressed: _showMyDialog, title: 'Cancelar'),
+                          onPressed: showMyDialogCancel, title: 'Cancelar'),
                     )
                   : Container(),
               SizedBox(
-                width: status == AppointmentStatus.confirmado ||
-                        status == AppointmentStatus.pendente
+                width: appointment.status == 'confirmado' ||
+                        appointment.status == 'pendente'
                     ? 8
                     : 0,
               ),
               Expanded(
                 child: ButtonConfirm(
-                    onPressed: () =>
-                        Navigator.pushNamed(context, '/details_appointments'),
+                    onPressed: () async {
+                      await Navigator.pushNamed(
+                          context, '/details_appointments',
+                          arguments: {"id": appointment.id});
+                      onPress();
+                    },
                     title: 'Detalhes'),
               ),
             ],
           ),
         ]),
+      ),
+    );
+  }
+}
+
+class CardAppointmentsAdminSk extends StatelessWidget {
+  const CardAppointmentsAdminSk({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        border: Border.all(color: const Color(0xffDDDDDD), width: 1),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Container(
+                      margin: const EdgeInsets.only(bottom: 4),
+                      height: 32,
+                      width: 100,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                  Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Container(
+                      margin: const EdgeInsets.only(bottom: 4),
+                      height: 32,
+                      width: 200,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                  Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Container(
+                      margin: const EdgeInsets.only(bottom: 4),
+                      height: 24,
+                      width: 148,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                  Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Container(
+                      margin: const EdgeInsets.only(bottom: 4),
+                      height: 24,
+                      width: 120,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Shimmer.fromColors(
+                baseColor: Colors.grey[300]!,
+                highlightColor: Colors.grey[100]!,
+                child: Container(
+                  height: 64,
+                  width: 64,
+                  margin: const EdgeInsets.only(bottom: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(64),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: Container(
+              height: 40,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

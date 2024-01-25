@@ -26,6 +26,29 @@ class AppointmentRepository {
     }
   }
 
+  Future<List<Appointment>> findAll(String? status, String? token, String? date) async {
+    try {
+      String path = 'appointments?';
+      status != null ? path = '${path}status=$status&' : null;
+      date != null ? path = '${path}date=$date&' : null;
+
+      var res = await _apiService.get(
+          path, {"authorization": "Bearer $token"});
+
+      if (res['success']) {
+        var results = res['results'] as List;
+
+        List<Appointment> appointments =
+            results.map((e) => Appointment.fromJson(e)).toList();
+
+        return appointments;
+      }
+      return [];
+    } catch (error) {
+      return [];
+    }
+  }
+
   Future<Appointment?> findOne(int id) async {
     try {
       var res = await _apiService.get('appointments/$id', null);
@@ -52,6 +75,20 @@ class AppointmentRepository {
       if (res['success']) {
         Appointment appointment = Appointment.fromJson(res['result']);
         return appointment;
+      }
+      return null;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  Future<Appointment?> updateStatus(int id, String status) async {
+    try {
+      var res = await _apiService.post(
+          '/appointments/change-status/$id', {"status": status}, null);
+
+      if (res['success']) {
+        return Appointment.fromJson(res['result']);
       }
       return null;
     } catch (error) {
