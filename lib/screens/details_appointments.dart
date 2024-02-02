@@ -2,6 +2,7 @@ import 'package:agenda_pastora_app/controllers/auth_controller.dart';
 import 'package:agenda_pastora_app/helpers/date.dart';
 import 'package:agenda_pastora_app/helpers/status.dart';
 import 'package:agenda_pastora_app/models/appointment.dart';
+import 'package:agenda_pastora_app/models/user.dart';
 import 'package:agenda_pastora_app/repositories/appointment_repository.dart';
 import 'package:agenda_pastora_app/utils/colors.dart';
 import 'package:agenda_pastora_app/widgets/avatar.dart';
@@ -24,9 +25,12 @@ class DetailsAppointments extends StatefulWidget {
 
 class _DetailsAppointmentsState extends State<DetailsAppointments> {
   final AppointmentRepository _repository = AppointmentRepository();
+  final TextEditingController responsibleController = TextEditingController();
   late int? appointmentId;
   late Appointment? appointment;
+  String? responsibleId;
   bool isLoading = true;
+  List<User> responsibles = [];
 
   Future<void> findAppointment(int id) async {
     if (isLoading == false) {
@@ -35,9 +39,12 @@ class _DetailsAppointmentsState extends State<DetailsAppointments> {
       });
     }
     var res = await _repository.findOne(id);
+    var resResponsibles = await _repository.findResponsibles();
+
     setState(() {
       appointmentId = res?.id;
       appointment = res;
+      responsibles = resResponsibles;
       isLoading = false;
     });
   }
@@ -144,11 +151,81 @@ class _DetailsAppointmentsState extends State<DetailsAppointments> {
                             const SizedBox(
                               height: 24,
                             ),
+                            Consumer<AuthController>(
+                              builder: (context, value, child) {
+                                if (value.member != null &&
+                                    appointment?.responsible != null) {
+                                  return Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            appointment?.responsible?.name ??
+                                                'AD Catalão',
+                                            style: const TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                          Text(
+                                              appointment?.responsible?.email ??
+                                                  ''),
+                                        ],
+                                      ),
+                                      Avatar(
+                                          image:
+                                              appointment?.responsible?.avatar,
+                                          name:
+                                              appointment?.responsible?.name ??
+                                                  'AD Catalão'),
+                                    ],
+                                  );
+                                } else if (value.user != null &&
+                                    appointment?.member != null) {
+                                  return Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            appointment?.member.name ??
+                                                'AD Catalão',
+                                            style: const TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                          Text(appointment?.member.email ?? ''),
+                                        ],
+                                      ),
+                                      Avatar(
+                                          image: appointment?.member.avatar,
+                                          name: appointment?.member.name ??
+                                              'AD Catalão'),
+                                    ],
+                                  );
+                                } else {
+                                  return Container();
+                                }
+                              },
+                            ),
                             appointment?.observation.isEmpty != true
                                 ? Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
+                                      const SizedBox(
+                                        height: 24,
+                                      ),
                                       const Text(
                                         'Observação',
                                         style: TextStyle(
@@ -174,7 +251,7 @@ class _DetailsAppointmentsState extends State<DetailsAppointments> {
                                     ],
                                   )
                                 : Container(),
-                            const SizedBox(height: 32),
+                            const SizedBox(height: 24),
                             Column(
                               children: [
                                 Consumer<AuthController>(
@@ -197,10 +274,13 @@ class _DetailsAppointmentsState extends State<DetailsAppointments> {
                                 const SizedBox(
                                   height: 16,
                                 ),
-                                appointment!.status == 'pendente' || appointment!.status == 'confirmado' ?  ButtonSecondary(
-                                  onPressed: _showMyDialogCancel,
-                                  title: 'Cancelar agendamento',
-                                ) : Container(),
+                                appointment!.status == 'pendente' ||
+                                        appointment!.status == 'confirmado'
+                                    ? ButtonSecondary(
+                                        onPressed: _showMyDialogCancel,
+                                        title: 'Cancelar agendamento',
+                                      )
+                                    : Container(),
                               ],
                             ),
                           ],
@@ -219,7 +299,7 @@ class _DetailsAppointmentsState extends State<DetailsAppointments> {
             title: 'Cancelar Agendamento',
             subtitle: 'Deseja mesmo cancelar o agendamento?',
             onChange: () async {
-              await _repository.updateStatus(appointmentId!, 'declinado');
+              await _repository.updateStatus(appointmentId!, 'declinado', null);
               await findAppointment(appointmentId!);
             });
       },
@@ -232,12 +312,44 @@ class _DetailsAppointmentsState extends State<DetailsAppointments> {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return CustomAlertDialog(
-            title: 'Confirmar Agendamento',
-            subtitle: 'Deseja mesmo confirmar o agendamento?',
-            onChange: () async {
-              await _repository.updateStatus(appointmentId!, 'confirmado');
-              await findAppointment(appointmentId!);
-            });
+          title: 'Confirmar Agendamento',
+          subtitle: 'Deseja mesmo confirmar o agendamento?',
+          children: SingleChildScrollView(
+            child: Column(
+              children: [
+                const SizedBox(
+                    height: 20), // Espaço entre o subtítulo e o DropdownMenu
+                DropdownMenu(
+                  controller: responsibleController,
+                  enableFilter: true,
+                  width: 260,
+                  hintText: 'Escolha um responsável',
+                  onSelected: (value) {
+                    if (value?.isNotEmpty == true) {
+                      responsibleId = value!;
+                    }
+                  },
+                  inputDecorationTheme: const InputDecorationTheme(
+                      constraints:
+                          BoxConstraints.expand(width: double.infinity)),
+                  dropdownMenuEntries: responsibles
+                      .map(
+                        (e) => DropdownMenuEntry(
+                          value: e.id,
+                          label: e.name,
+                        ),
+                      )
+                      .toList(),
+                ),
+              ],
+            ),
+          ),
+          onChange: () async {
+            await _repository.updateStatus(
+                appointmentId!, 'confirmado', responsibleId);
+            await findAppointment(appointmentId!);
+          },
+        );
       },
     );
   }

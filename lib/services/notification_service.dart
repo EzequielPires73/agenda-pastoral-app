@@ -39,8 +39,8 @@ class NotificationService {
   }
 
   _onSelectNotification(String? payload) {
+      Navigator.of(Routes.navigatorKey!.currentContext!).pushReplacementNamed('/home', arguments: {"selectedIndex": 1});
     if(payload != null && payload.isNotEmpty) {
-      Navigator.of(Routes.navigatorKey!.currentContext!).pushReplacementNamed(payload);
     }
   }
 

@@ -2,28 +2,26 @@ import 'package:agenda_pastora_app/controllers/appointment_controller.dart';
 import 'package:agenda_pastora_app/helpers/date.dart';
 import 'package:agenda_pastora_app/models/appointment_category.dart';
 import 'package:agenda_pastora_app/models/available_time.dart';
-import 'package:agenda_pastora_app/repositories/appointment_category_repository.dart';
-import 'package:agenda_pastora_app/repositories/available_time_repository.dart';
 import 'package:agenda_pastora_app/utils/colors.dart';
 import 'package:agenda_pastora_app/widgets/buttons/button_cancel.dart';
 import 'package:agenda_pastora_app/widgets/buttons/button_confirm.dart';
 import 'package:agenda_pastora_app/widgets/calendar.dart';
+import 'package:agenda_pastora_app/widgets/cards/card-member.dart';
 import 'package:agenda_pastora_app/widgets/form_components/text_field_primary.dart';
-import 'package:agenda_pastora_app/widgets/header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:table_calendar/table_calendar.dart';
 
-class CreateAppointmentsPage extends StatefulWidget {
-  const CreateAppointmentsPage({super.key});
+class CreateAppointmentAdminPage extends StatefulWidget {
+  const CreateAppointmentAdminPage({super.key});
 
   @override
-  State<CreateAppointmentsPage> createState() => _CreateAppointmentsPageState();
+  State<CreateAppointmentAdminPage> createState() =>
+      _CreateAppointmentAdminPageState();
 }
 
-class _CreateAppointmentsPageState extends State<CreateAppointmentsPage> {
+class _CreateAppointmentAdminPageState
+    extends State<CreateAppointmentAdminPage> {
   late final AppointmentController controller;
   List<AvailableTime> availableTimes = [];
   List<AppointmentCategory> appointmentsCategories = [];
@@ -92,7 +90,8 @@ class _CreateAppointmentsPageState extends State<CreateAppointmentsPage> {
                         child: TextFieldPrimary(
                           controller: controller.observation,
                           label: 'Assunto do agendamento',
-                          placeholder: 'Descreva brevemente o assunto do agendamento',
+                          placeholder:
+                              'Descreva brevemente o assunto do agendamento',
                           maxLines: 4,
                         ),
                       ),
@@ -246,12 +245,60 @@ class _CreateAppointmentsPageState extends State<CreateAppointmentsPage> {
                     SliverToBoxAdapter(
                       child: Container(
                         padding: const EdgeInsets.only(
+                            left: 25, right: 25, top: 32, bottom: 16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Membro do agendamento',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
+                                color: ColorPalette.gray3,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 16,
+                            ),
+                            InkWell(
+                              onTap: _showDialog,
+                              child: const SizedBox(
+                                height: 48,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Selecione o membro',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w400,
+                                        color: ColorPalette.gray5,
+                                      ),
+                                    ),
+                                    Icon(
+                                      FeatherIcons.chevronRight,
+                                      color: ColorPalette.gray5,
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SliverToBoxAdapter(
+                      child: Container(
+                        padding: const EdgeInsets.only(
                             left: 25, right: 25, top: 32, bottom: 32),
                         child: Row(
                           children: [
                             Expanded(
                               child: ButtonCancel(
-                                  onPressed: () => Navigator.pop(context), title: 'Cancelar'),
+                                  onPressed: () => Navigator.pop(context),
+                                  title: 'Cancelar'),
                             ),
                             const SizedBox(
                               width: 8,
@@ -270,6 +317,47 @@ class _CreateAppointmentsPageState extends State<CreateAppointmentsPage> {
                 );
         },
       ),
+    );
+  }
+
+  Future<void> _showDialog() async {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog.fullscreen(
+          child: Scaffold(
+            appBar: AppBar(
+              toolbarHeight: 72,
+              backgroundColor: Colors.white,
+              leading: IconButton(
+                icon: const Icon(FeatherIcons.x),
+                onPressed: () => Navigator.pop(context),
+              ),
+              actions: [
+                IconButton(
+                  icon: const Icon(FeatherIcons.plus),
+                  onPressed: () =>
+                      Navigator.pushNamed(context, '/admin/create_member'),
+                ),
+              ],
+              title: const Text(
+                'Selecione o membro',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+              ),
+            ),
+            body: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 25),
+              child: ListView.separated(
+                itemBuilder: (context, index) => const CardMember(),
+                separatorBuilder: (context, index) => const SizedBox(
+                  height: 16,
+                ),
+                itemCount: 8,
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

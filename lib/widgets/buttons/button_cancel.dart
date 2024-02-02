@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class ButtonCancel extends StatelessWidget {
   final String title;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final bool? isLoading;
 
   const ButtonCancel(

@@ -8,7 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 
 class ScreenNavigatorPage extends StatefulWidget {
-  const ScreenNavigatorPage({super.key});
+  final int selectedIndex;
+  const ScreenNavigatorPage({super.key, required this.selectedIndex});
 
   @override
   State<ScreenNavigatorPage> createState() => _ScreenNavigatorPageState();
@@ -26,6 +27,12 @@ class _ScreenNavigatorPageState extends State<ScreenNavigatorPage> {
     setState(() {
       selectedIndex = index;
     });
+  }
+
+  @override
+  void initState() {
+    selectedIndex = widget.selectedIndex;
+    super.initState();
   }
 
   @override

@@ -35,7 +35,7 @@ class AppointmentController extends ChangeNotifier {
 
   Future<void> loadInitialValues() async {
     try {
-      availableTimes = await _availableTimeRepository.findAll();
+      availableTimes = await _availableTimeRepository.findAll(null);
       appointmentsCategories = await _appointmentCategoryRepository.findAll();
     } catch (error) {
       state = AppointmentState.error;

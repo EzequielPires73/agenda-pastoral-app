@@ -2,6 +2,7 @@ import 'package:agenda_pastora_app/models/appointment.dart';
 import 'package:agenda_pastora_app/repositories/appointment_repository.dart';
 import 'package:agenda_pastora_app/utils/colors.dart';
 import 'package:agenda_pastora_app/widgets/cards/card-appointments-user.dart';
+import 'package:agenda_pastora_app/widgets/custom_alert_dialog.dart';
 import 'package:agenda_pastora_app/widgets/header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -29,14 +30,32 @@ class _HomePageState extends State<HomePage> {
   Future<void> findAppointments() async {
     final shared = await SharedPreferences.getInstance();
     final accessToken = shared.getString('member.access_token');
+
     var resultsAppointments = await _repository.findAppointmentsByMember(
         'pendente,confirmado', accessToken);
     var resultsHistory = await _repository.findAppointmentsByMember(
         'finalizado,declinado', accessToken);
+
     setState(() {
       appointments = resultsAppointments;
       history = resultsHistory;
     });
+  }
+
+  Future<void> _showMyDialogCancel(int id) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return CustomAlertDialog(
+            title: 'Cancelar Agendamento',
+            subtitle: 'Deseja mesmo cancelar o agendamento?',
+            onChange: () async {
+              await _repository.updateStatus(id, 'declinado', null);
+              await findAppointments();
+            });
+      },
+    );
   }
 
   @override
@@ -97,6 +116,7 @@ class _HomePageState extends State<HomePage> {
                                     .map((e) => CardAppointmentsUser(
                                           appointment: e,
                                           onPress: _refresh,
+                                          onCancel: _showMyDialogCancel,
                                         ))
                                     .toList(),
                               ],
@@ -107,6 +127,7 @@ class _HomePageState extends State<HomePage> {
                                     .map((e) => CardAppointmentsUser(
                                           appointment: e,
                                           onPress: _refresh,
+                                          onCancel: _showMyDialogCancel,
                                         ))
                                     .toList(),
                               ],

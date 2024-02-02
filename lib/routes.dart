@@ -1,3 +1,5 @@
+import 'package:agenda_pastora_app/screens/admin/create_appointment_admin.dart';
+import 'package:agenda_pastora_app/screens/admin/create_member_admin.dart';
 import 'package:agenda_pastora_app/screens/screen_navigator.dart';
 import 'package:agenda_pastora_app/screens/admin/screen_navigator_admin.dart';
 import 'package:agenda_pastora_app/screens/admin/login_admin.dart';
@@ -16,7 +18,11 @@ class Routes {
     '/splash': (_) => const Splash(),
     '/choose_role': (_) => const ChooseRolePage(),
     '/login': (_) => const LoginPage(),
-    '/home': (_) => const ScreenNavigatorPage(),
+    '/home': (context) {
+      final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>? ?? {};
+      final selectedIndex = args.containsKey('selectedIndex') ? args['selectedIndex'] as int : 0;
+      return ScreenNavigatorPage(selectedIndex: selectedIndex);
+    },
     '/notification': (_) => const NotificationsPage(),
     '/singup': (_) => const SingUpPage(),
     '/create_appointments': (_) => const CreateAppointmentsPage(),
@@ -25,6 +31,8 @@ class Routes {
     /* Admin Routes */
     '/admin/login': (_) => const LoginAdminPage(),
     '/admin/home': (_) => const ScreenNavigatorAdminPage(),
+    '/admin/create_appointments': (_) => const CreateAppointmentAdminPage(),
+    '/admin/create_member': (_) => const CreateMemberAdminPage(),
   };
 
   static String initial = '/splash';

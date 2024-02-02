@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:agenda_pastora_app/models/appointment.dart';
+import 'package:agenda_pastora_app/models/user.dart';
 import 'package:agenda_pastora_app/services/api_service.dart';
 
 class AppointmentRepository {
@@ -82,10 +83,12 @@ class AppointmentRepository {
     }
   }
 
-  Future<Appointment?> updateStatus(int id, String status) async {
+  Future<Appointment?> updateStatus(int id, String status, String? responsibleId) async {
     try {
       var res = await _apiService.post(
-          '/appointments/change-status/$id', {"status": status}, null);
+          '/appointments/change-status/$id', {"status": status, "responsibleId": responsibleId}, null);
+
+      print(responsibleId);
 
       if (res['success']) {
         return Appointment.fromJson(res['result']);
@@ -93,6 +96,23 @@ class AppointmentRepository {
       return null;
     } catch (error) {
       return null;
+    }
+  }
+
+  Future<List<User>> findResponsibles() async {
+    try {
+      var res = await _apiService.get('users?types=shepherd,shepherd_president', null);
+
+      if(res['success']) {
+        var list = res['results'] as List;
+        List<User> responsibles = list.map((e) => User.fromJson(e)).toList();
+
+        return responsibles;
+      }
+
+      return [];
+    } catch(error) {
+      return [];
     }
   }
 }

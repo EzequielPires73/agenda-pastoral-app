@@ -5,13 +5,16 @@ import 'package:flutter/material.dart';
 class CustomAlertDialog extends StatelessWidget {
   final String title;
   final String subtitle;
+  final Widget? children;
   final Function() onChange;
 
-  const CustomAlertDialog(
-      {super.key,
-      required this.title,
-      required this.subtitle,
-      required this.onChange});
+  const CustomAlertDialog({
+    super.key,
+    required this.title,
+    required this.subtitle,
+    required this.onChange,
+    this.children,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -32,9 +35,10 @@ class CustomAlertDialog extends StatelessWidget {
             style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
           ),
           content: SingleChildScrollView(
-            child: ListBody(
+            child: Column(
               children: <Widget>[
                 Text(subtitle),
+                children ?? Container()
               ],
             ),
           ),

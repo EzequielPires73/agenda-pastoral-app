@@ -18,8 +18,12 @@ enum AppointmentStatus {
 class CardAppointmentsUser extends StatelessWidget {
   final Appointment appointment;
   final Function() onPress;
+  final Function(int id)? onCancel;
   const CardAppointmentsUser(
-      {super.key, required this.appointment, required this.onPress});
+      {super.key,
+      required this.appointment,
+      required this.onPress,
+      this.onCancel});
 
   @override
   Widget build(BuildContext context) {
@@ -152,7 +156,11 @@ class CardAppointmentsUser extends StatelessWidget {
                       appointment.status == 'pendente'
                   ? Expanded(
                       child: ButtonCancel(
-                          onPressed: showMyDialog, title: 'Cancelar'),
+                        onPressed: () => onCancel != null
+                            ? onCancel!(appointment.id!)
+                            : null,
+                        title: 'Cancelar',
+                      ),
                     )
                   : Container(),
               SizedBox(

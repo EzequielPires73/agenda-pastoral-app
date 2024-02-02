@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 
 class ApiService {
   //final baseUrl = 'https://adcatalao-96c2f1e56512.herokuapp.com/';
-  final baseUrl = 'http://192.168.0.101:8080/';
+  final String baseUrl = 'http://192.168.0.101:8080/';
   final dio = Dio(BaseOptions(baseUrl: 'http://192.168.0.101:8080/'));
 
   Future<Map<String, dynamic>> get(String path, Map<String, String>? headers) async {
