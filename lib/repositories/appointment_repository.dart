@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:agenda_pastora_app/models/appointment.dart';
+import 'package:agenda_pastora_app/models/member.dart';
 import 'package:agenda_pastora_app/models/user.dart';
 import 'package:agenda_pastora_app/services/api_service.dart';
 
@@ -106,6 +107,23 @@ class AppointmentRepository {
       if(res['success']) {
         var list = res['results'] as List;
         List<User> responsibles = list.map((e) => User.fromJson(e)).toList();
+
+        return responsibles;
+      }
+
+      return [];
+    } catch(error) {
+      return [];
+    }
+  }
+  
+  Future<List<Member>> findMembers() async {
+    try {
+      var res = await _apiService.get('members', null);
+
+      if(res['success']) {
+        var list = res['results'] as List;
+        List<Member> responsibles = list.map((e) => Member.fromJson(e)).toList();
 
         return responsibles;
       }

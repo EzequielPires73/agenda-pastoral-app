@@ -7,6 +7,7 @@ import 'package:agenda_pastora_app/widgets/buttons/button_cancel.dart';
 import 'package:agenda_pastora_app/widgets/buttons/button_confirm.dart';
 import 'package:agenda_pastora_app/widgets/calendar.dart';
 import 'package:agenda_pastora_app/widgets/cards/card-member.dart';
+import 'package:agenda_pastora_app/widgets/dialogs/select_member.dart';
 import 'package:agenda_pastora_app/widgets/form_components/text_field_primary.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -323,41 +324,7 @@ class _CreateAppointmentAdminPageState
   Future<void> _showDialog() async {
     return showDialog(
       context: context,
-      builder: (context) {
-        return Dialog.fullscreen(
-          child: Scaffold(
-            appBar: AppBar(
-              toolbarHeight: 72,
-              backgroundColor: Colors.white,
-              leading: IconButton(
-                icon: const Icon(FeatherIcons.x),
-                onPressed: () => Navigator.pop(context),
-              ),
-              actions: [
-                IconButton(
-                  icon: const Icon(FeatherIcons.plus),
-                  onPressed: () =>
-                      Navigator.pushNamed(context, '/admin/create_member'),
-                ),
-              ],
-              title: const Text(
-                'Selecione o membro',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-              ),
-            ),
-            body: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 25),
-              child: ListView.separated(
-                itemBuilder: (context, index) => const CardMember(),
-                separatorBuilder: (context, index) => const SizedBox(
-                  height: 16,
-                ),
-                itemCount: 8,
-              ),
-            ),
-          ),
-        );
-      },
+      builder: (context) => SelectMember(),
     );
   }
 }
