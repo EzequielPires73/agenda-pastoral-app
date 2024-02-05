@@ -56,7 +56,7 @@ class _SelectMemberState extends State<SelectMember> {
         body: Container(
           padding: const EdgeInsets.symmetric(horizontal: 25),
           child: ListView.separated(
-            itemBuilder: (context, index) => const CardMember(),
+            itemBuilder: (context, index) => CardMember(member: members[index]),
             separatorBuilder: (context, index) => const SizedBox(
               height: 16,
             ),

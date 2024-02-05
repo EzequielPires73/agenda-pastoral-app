@@ -262,6 +262,12 @@ class _DetailsAppointmentsState extends State<DetailsAppointments> {
                                         onPressed: _showMyDialogConfirm,
                                         title: 'Confirmar agendamento',
                                       );
+                                    } else if (value.user != null &&
+                                        appointment!.status == 'confirmado') {
+                                      return ButtonPrimary(
+                                        onPressed: _showMyDialogConfirm,
+                                        title: 'Finalizar agendamento',
+                                      );
                                     } else if (value.member != null) {
                                       ButtonPrimary(
                                         onPressed: () => {},

@@ -1,9 +1,11 @@
+import 'package:agenda_pastora_app/models/member.dart';
 import 'package:agenda_pastora_app/utils/colors.dart';
 import 'package:agenda_pastora_app/widgets/avatar.dart';
 import 'package:flutter/material.dart';
 
 class CardMember extends StatelessWidget {
-  const CardMember({super.key});
+  final Member member;
+  const CardMember({super.key, required this.member});
 
   @override
   Widget build(BuildContext context) {
@@ -16,10 +18,10 @@ class CardMember extends StatelessWidget {
         decoration: BoxDecoration(
             border: Border.all(color: const Color(0xffDDDDDD), width: 1),
             borderRadius: BorderRadius.circular(8)),
-        child: const Row(
+        child: Row(
           children: [
-            Avatar(image: null, name: 'Ezequiel Pires'),
-            SizedBox(
+            Avatar(image: member.avatar, name: member.name),
+            const SizedBox(
               width: 12,
             ),
             Expanded(
@@ -27,18 +29,28 @@ class CardMember extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Ezequiel Pires',
-                    style: TextStyle(
+                    member.name,
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                       color: ColorPalette.gray3,
                     ),
                   ),
                   Text(
-                    'ezequiel.pires082000@gmail.com',
+                    member.email,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w300,
+                      color: ColorPalette.gray3,
+                    ),
+                  ),
+                  Text(
+                    member.phone,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w300,
                       color: ColorPalette.gray3,
