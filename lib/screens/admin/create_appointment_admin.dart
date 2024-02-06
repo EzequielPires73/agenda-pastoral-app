@@ -9,6 +9,8 @@ import 'package:agenda_pastora_app/widgets/calendar.dart';
 import 'package:agenda_pastora_app/widgets/cards/card-member.dart';
 import 'package:agenda_pastora_app/widgets/dialogs/select_member.dart';
 import 'package:agenda_pastora_app/widgets/form_components/text_field_primary.dart';
+import 'package:agenda_pastora_app/widgets/member_select.dart';
+import 'package:agenda_pastora_app/widgets/user_select.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
@@ -232,62 +234,31 @@ class _CreateAppointmentAdminPageState
                                     child: Container(
                                       padding: const EdgeInsets.symmetric(
                                         horizontal: 16,
-                                        vertical: 8,
+                                        vertical: 16,
                                       ),
                                       decoration: BoxDecoration(
-                                          color: ColorPalette.input,
+                                          color: ColorPalette.redLight,
                                           borderRadius:
-                                              BorderRadius.circular(4)),
+                                              BorderRadius.circular(6)),
                                       child: const Text(
-                                          'Selecione um motivo do agendamento'),
+                                          'Selecione um motivo do agendamento', style: TextStyle(color: ColorPalette.red, fontSize: 16, fontWeight: FontWeight.w500),),
                                     ),
                                   ),
                           ),
-                    SliverToBoxAdapter(
-                      child: Container(
-                        padding: const EdgeInsets.only(
-                            left: 25, right: 25, top: 32, bottom: 16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Membro do agendamento',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w500,
-                                color: ColorPalette.gray3,
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 16,
-                            ),
-                            InkWell(
-                              onTap: _showDialog,
-                              child: const SizedBox(
-                                height: 48,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'Selecione o membro',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w400,
-                                        color: ColorPalette.gray5,
-                                      ),
-                                    ),
-                                    Icon(
-                                      FeatherIcons.chevronRight,
-                                      color: ColorPalette.gray5,
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                    
+                    const SliverToBoxAdapter(
+                      child: Column(
+                        children: [
+                          SizedBox(height: 16,),
+                          MemberSelect(
+                            title: 'Membro do agendamento',
+                            placeholder: 'Selecione o membro',
+                          ),
+                          UserSelect(
+                            title: 'Responsável do agendamento',
+                            placeholder: 'Selecione o responsável',
+                          ),
+                        ],
                       ),
                     ),
                     SliverToBoxAdapter(
@@ -318,13 +289,6 @@ class _CreateAppointmentAdminPageState
                 );
         },
       ),
-    );
-  }
-
-  Future<void> _showDialog() async {
-    return showDialog(
-      context: context,
-      builder: (context) => SelectMember(),
     );
   }
 }

@@ -1,5 +1,5 @@
 abstract class UserAbstract {
-  String id;
+  String? id;
   String name;
   String email;
   String phone;
@@ -7,14 +7,15 @@ abstract class UserAbstract {
   String? avatar;
   String? notificationToken;
 
-  UserAbstract(
-      {required this.id,
-      required this.name,
-      required this.email,
-      required this.phone,
-      this.password,
-      this.avatar,
-      this.notificationToken});
+  UserAbstract({
+    required this.name,
+    required this.email,
+    required this.phone,
+    this.id,
+    this.password,
+    this.avatar,
+    this.notificationToken,
+  });
 }
 
 class User extends UserAbstract {

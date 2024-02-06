@@ -42,7 +42,7 @@ class AuthController extends ChangeNotifier {
         notifyListeners();
       }
     } catch (error) {
-      errorMsg = error.toString();
+      errorMsg = 'Login inválido, por favor, tente novamente.';
       state = AuthState.error;
       notifyListeners();
     } finally {

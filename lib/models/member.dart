@@ -5,18 +5,18 @@ class Member extends UserAbstract {
   bool? deficiency;
   List? appointments;
 
-  Member(
-      {required String id,
-      required String name,
-      required String email,
-      required String phone,
-      String? password,
-      String? avatar,
-      String? notificationToken,
-      this.cpf,
-      this.deficiency,
-      this.appointments})
-      : super(
+  Member({
+    required String name,
+    required String email,
+    required String phone,
+    String? password,
+    String? avatar,
+    String? notificationToken,
+    String? id,
+    this.cpf,
+    this.deficiency,
+    this.appointments,
+  }) : super(
           id: id,
           name: name,
           email: email,
@@ -40,11 +40,22 @@ class Member extends UserAbstract {
   }
 
   toJson() {
-    return {
-      "id": id,
-      "name": name,
-      "email": email,
-      "phone": phone
-    };
+    if (id != null) {
+      return {
+        "id": id,
+        "name": name,
+        "email": email,
+        "phone": phone,
+        "cpf": cpf,
+      };
+    } else {
+       return {
+        "name": name,
+        "email": email,
+        "phone": phone,
+        "password": password,
+        "cpf": cpf,
+      };
+    }
   }
 }
