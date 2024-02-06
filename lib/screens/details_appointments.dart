@@ -2,6 +2,7 @@ import 'package:agenda_pastora_app/controllers/auth_controller.dart';
 import 'package:agenda_pastora_app/helpers/date.dart';
 import 'package:agenda_pastora_app/helpers/status.dart';
 import 'package:agenda_pastora_app/models/appointment.dart';
+import 'package:agenda_pastora_app/models/member.dart';
 import 'package:agenda_pastora_app/models/user.dart';
 import 'package:agenda_pastora_app/repositories/appointment_repository.dart';
 import 'package:agenda_pastora_app/utils/colors.dart';
@@ -10,6 +11,7 @@ import 'package:agenda_pastora_app/widgets/buttons/button_cancel.dart';
 import 'package:agenda_pastora_app/widgets/buttons/button_confirm.dart';
 import 'package:agenda_pastora_app/widgets/buttons/button_primary.dart';
 import 'package:agenda_pastora_app/widgets/buttons/button_secondary.dart';
+import 'package:agenda_pastora_app/widgets/cards/card-member.dart';
 import 'package:agenda_pastora_app/widgets/custom_alert_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -187,30 +189,35 @@ class _DetailsAppointmentsState extends State<DetailsAppointments> {
                                   );
                                 } else if (value.user != null &&
                                     appointment?.member != null) {
-                                  return Row(
+                                  return Column(
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            appointment?.member.name ??
-                                                'AD Catalão',
-                                            style: const TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w500),
-                                          ),
-                                          Text(appointment?.member.email ?? ''),
-                                        ],
+                                      const Text(
+                                        'Membro',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w500),
                                       ),
-                                      Avatar(
-                                          image: appointment?.member.avatar,
-                                          name: appointment?.member.name ??
-                                              'AD Catalão'),
+                                      const SizedBox(
+                                        height: 8,
+                                      ),
+                                      CardMember(
+                                          member: appointment!.member,
+                                          onTap: () {}),
+                                      const SizedBox(
+                                        height: 24,
+                                      ),
+                                      const Text(
+                                        'Responsável',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                      const SizedBox(
+                                        height: 8,
+                                      ),
+                                      CardMember(
+                                          member: appointment!.responsible!,
+                                          onTap: () {}),
                                     ],
                                   );
                                 } else {
@@ -265,7 +272,7 @@ class _DetailsAppointmentsState extends State<DetailsAppointments> {
                                     } else if (value.user != null &&
                                         appointment!.status == 'confirmado') {
                                       return ButtonPrimary(
-                                        onPressed: _showMyDialogConfirm,
+                                        onPressed: _showMyDialogFinish,
                                         title: 'Finalizar agendamento',
                                       );
                                     } else if (value.member != null) {
@@ -353,6 +360,23 @@ class _DetailsAppointmentsState extends State<DetailsAppointments> {
           onChange: () async {
             await _repository.updateStatus(
                 appointmentId!, 'confirmado', responsibleId);
+            await findAppointment(appointmentId!);
+          },
+        );
+      },
+    );
+  }
+  Future<void> _showMyDialogFinish() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return CustomAlertDialog(
+          title: 'Finalizar Agendamento',
+          subtitle: 'Deseja mesmo finalizar o agendamento?',
+          onChange: () async {
+            await _repository.updateStatus(
+                appointmentId!, 'finalizado', responsibleId);
             await findAppointment(appointmentId!);
           },
         );

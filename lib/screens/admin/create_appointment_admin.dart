@@ -2,6 +2,8 @@ import 'package:agenda_pastora_app/controllers/appointment_controller.dart';
 import 'package:agenda_pastora_app/helpers/date.dart';
 import 'package:agenda_pastora_app/models/appointment_category.dart';
 import 'package:agenda_pastora_app/models/available_time.dart';
+import 'package:agenda_pastora_app/models/member.dart';
+import 'package:agenda_pastora_app/models/user.dart';
 import 'package:agenda_pastora_app/utils/colors.dart';
 import 'package:agenda_pastora_app/widgets/buttons/button_cancel.dart';
 import 'package:agenda_pastora_app/widgets/buttons/button_confirm.dart';
@@ -29,6 +31,8 @@ class _CreateAppointmentAdminPageState
   List<AvailableTime> availableTimes = [];
   List<AppointmentCategory> appointmentsCategories = [];
   AppointmentCategory? category;
+  UserAbstract? member;
+  UserAbstract? user;
   int? time;
   bool loading = true;
 
@@ -241,22 +245,38 @@ class _CreateAppointmentAdminPageState
                                           borderRadius:
                                               BorderRadius.circular(6)),
                                       child: const Text(
-                                          'Selecione um motivo do agendamento', style: TextStyle(color: ColorPalette.red, fontSize: 16, fontWeight: FontWeight.w500),),
+                                        'Selecione um motivo do agendamento',
+                                        style: TextStyle(
+                                            color: ColorPalette.red,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500),
+                                      ),
                                     ),
                                   ),
                           ),
-                    
-                    const SliverToBoxAdapter(
+                    SliverToBoxAdapter(
                       child: Column(
                         children: [
-                          SizedBox(height: 16,),
+                          const SizedBox(
+                            height: 16,
+                          ),
                           MemberSelect(
                             title: 'Membro do agendamento',
                             placeholder: 'Selecione o membro',
+                            onSelect: (memberSelected) {
+                              setState(() {
+                                member = memberSelected;
+                              });
+                            },
                           ),
                           UserSelect(
                             title: 'Responsável do agendamento',
                             placeholder: 'Selecione o responsável',
+                            onSelect: (userSelected) {
+                              setState(() {
+                                user = userSelected;
+                              });
+                            },
                           ),
                         ],
                       ),
@@ -278,7 +298,7 @@ class _CreateAppointmentAdminPageState
                             Expanded(
                               child: ButtonConfirm(
                                   onPressed: () =>
-                                      controller.createAppointment(),
+                                      controller.createAppointment(memberSelected: member, responsibleSelected: user),
                                   title: 'Solicitar'),
                             ),
                           ],

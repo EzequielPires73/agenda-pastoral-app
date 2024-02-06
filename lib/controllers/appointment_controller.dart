@@ -5,6 +5,7 @@ import 'package:agenda_pastora_app/models/appointment.dart';
 import 'package:agenda_pastora_app/models/appointment_category.dart';
 import 'package:agenda_pastora_app/models/available_time.dart';
 import 'package:agenda_pastora_app/models/member.dart';
+import 'package:agenda_pastora_app/models/user.dart';
 import 'package:agenda_pastora_app/repositories/appointment_category_repository.dart';
 import 'package:agenda_pastora_app/repositories/appointment_repository.dart';
 import 'package:agenda_pastora_app/repositories/available_time_repository.dart';
@@ -98,10 +99,10 @@ class AppointmentController extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> createAppointment() async {
+  Future<void> createAppointment({UserAbstract? memberSelected, UserAbstract? responsibleSelected}) async {
     state = AppointmentState.loadding;
     notifyListeners();
-
+    print(memberSelected);
     try {
       final shared = await SharedPreferences.getInstance();
       final accessToken = shared.getString('access_token');
@@ -115,8 +116,9 @@ class AppointmentController extends ChangeNotifier {
               observation: observation.text,
               start: time!.start,
               end: time!.end,
-              status: 'pendente',
-              member: Member.fromJson(jsonDecode(member)),
+              status: responsibleSelected != null ? 'confirmado' : 'pendente',
+              member: memberSelected != null ? memberSelected as Member : Member.fromJson(jsonDecode(member)),
+              responsible: responsibleSelected != null ? responsibleSelected as User : null
             ),
             accessToken);
 

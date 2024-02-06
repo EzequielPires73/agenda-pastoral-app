@@ -48,6 +48,8 @@ class Appointment {
       "end": end,
       "status": status,
       "member": member.toJson(),
+      "memberId": member.id,
+      "responsibleId": responsible?.id
     };
   }
 }

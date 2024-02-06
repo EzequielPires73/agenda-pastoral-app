@@ -71,7 +71,7 @@ class AppointmentRepository {
     try {
       var res = await _apiService.post(
         'appointments',
-        json.encode(appointment),
+        appointment.toJson(),
         {"authorization": "Bearer $token"},
       );
       if (res['success']) {
@@ -88,8 +88,6 @@ class AppointmentRepository {
     try {
       var res = await _apiService.post(
           '/appointments/change-status/$id', {"status": status, "responsibleId": responsibleId}, null);
-
-      print(responsibleId);
 
       if (res['success']) {
         return Appointment.fromJson(res['result']);

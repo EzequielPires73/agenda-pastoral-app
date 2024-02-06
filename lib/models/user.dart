@@ -16,6 +16,15 @@ abstract class UserAbstract {
     this.avatar,
     this.notificationToken,
   });
+
+  toJson() {
+    return {
+      "id": id,
+      "name": name,
+      "email": email,
+      "phone" : phone,
+    };
+  }
 }
 
 class User extends UserAbstract {

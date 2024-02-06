@@ -1,33 +1,33 @@
 import 'package:agenda_pastora_app/models/member.dart';
+import 'package:agenda_pastora_app/models/user.dart';
 import 'package:agenda_pastora_app/repositories/appointment_repository.dart';
 import 'package:agenda_pastora_app/widgets/cards/card-member.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 
-class SelectMember extends StatefulWidget {
-  final Function(Member member) onSelect;
-  const SelectMember({super.key, required this.onSelect});
+class SelectResponsible extends StatefulWidget {
+  final Function(UserAbstract user) onSelect;
+  const SelectResponsible({super.key, required this.onSelect});
 
   @override
-  State<SelectMember> createState() => _SelectMemberState();
+  State<SelectResponsible> createState() => _SelectResponsibleState();
 }
 
-class _SelectMemberState extends State<SelectMember> {
+class _SelectResponsibleState extends State<SelectResponsible> {
   final AppointmentRepository _repository = AppointmentRepository();
-  List<Member> members = [];
+  List<User> responsible = [];
 
-  Future<void> findMembers() async {
-    var resMembers = await _repository.findMembers();
+  Future<void> findResponsible() async {
+    var resResponsible = await _repository.findResponsibles();
     setState(() {
-      members = resMembers;
+      responsible = resResponsible;
     });
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    findMembers();
+    findResponsible();
   }
 
   @override
@@ -58,16 +58,16 @@ class _SelectMemberState extends State<SelectMember> {
           padding: const EdgeInsets.symmetric(horizontal: 25),
           child: ListView.separated(
             itemBuilder: (context, index) => CardMember(
-              member: members[index],
+              member: responsible[index],
               onTap: () {
-                widget.onSelect(members[index]);
+                widget.onSelect(responsible[index]);
                 Navigator.pop(context);
               },
             ),
             separatorBuilder: (context, index) => const SizedBox(
               height: 16,
             ),
-            itemCount: members.length,
+            itemCount: responsible.length,
           ),
         ),
       ),
