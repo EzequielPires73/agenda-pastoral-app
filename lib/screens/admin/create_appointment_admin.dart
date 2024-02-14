@@ -7,11 +7,14 @@ import 'package:agenda_pastora_app/models/user.dart';
 import 'package:agenda_pastora_app/utils/colors.dart';
 import 'package:agenda_pastora_app/widgets/buttons/button_cancel.dart';
 import 'package:agenda_pastora_app/widgets/buttons/button_confirm.dart';
+import 'package:agenda_pastora_app/widgets/buttons/button_primary.dart';
+import 'package:agenda_pastora_app/widgets/buttons/button_secondary.dart';
 import 'package:agenda_pastora_app/widgets/calendar.dart';
 import 'package:agenda_pastora_app/widgets/cards/card-member.dart';
 import 'package:agenda_pastora_app/widgets/dialogs/select_member.dart';
 import 'package:agenda_pastora_app/widgets/form_components/text_field_primary.dart';
 import 'package:agenda_pastora_app/widgets/member_select.dart';
+import 'package:agenda_pastora_app/widgets/modals/modal-create-available-time.dart';
 import 'package:agenda_pastora_app/widgets/user_select.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -255,6 +258,14 @@ class _CreateAppointmentAdminPageState
                                   ),
                           ),
                     SliverToBoxAdapter(
+                      child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 25),
+                          margin: EdgeInsets.only(top: 16),
+                          child: ButtonPrimary(
+                              onPressed: showMyDialogCreateAvaibleTime,
+                              title: 'Selecionar Horário Dinâmico')),
+                    ),
+                    SliverToBoxAdapter(
                       child: Column(
                         children: [
                           const SizedBox(
@@ -297,8 +308,9 @@ class _CreateAppointmentAdminPageState
                             ),
                             Expanded(
                               child: ButtonConfirm(
-                                  onPressed: () =>
-                                      controller.createAppointment(memberSelected: member, responsibleSelected: user),
+                                  onPressed: () => controller.createAppointment(
+                                      memberSelected: member,
+                                      responsibleSelected: user),
                                   title: 'Solicitar'),
                             ),
                           ],
@@ -309,6 +321,19 @@ class _CreateAppointmentAdminPageState
                 );
         },
       ),
+    );
+  }
+
+  Future<void> showMyDialogCreateAvaibleTime() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return ModalCreateAvailableTime(
+            onSubmit: (start, end) => Time(
+                start: formatTimeHourMinute(start),
+                end: formatTimeHourMinute(end)));
+      },
     );
   }
 }

@@ -1,15 +1,24 @@
 import 'package:agenda_pastora_app/helpers/date.dart';
 import 'package:agenda_pastora_app/models/available_time.dart';
+import 'package:agenda_pastora_app/repositories/available_time_repository.dart';
 import 'package:agenda_pastora_app/widgets/buttons/button_cancel.dart';
 import 'package:agenda_pastora_app/widgets/custom_alert_dialog.dart';
 import 'package:flutter/material.dart';
 
 class CardAvailableTime extends StatelessWidget {
+  final AvailableTimeRepository _availableTimeRepository =
+      AvailableTimeRepository();
   final Time time;
-  const CardAvailableTime({super.key, required this.time});
+  final Function() onAction;
+  CardAvailableTime({super.key, required this.time, required this.onAction});
 
   @override
   Widget build(BuildContext context) {
+    void handleErrorMessage(String message) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(message)));
+    }
+
     Future<void> showMyDialogCancel() async {
       return showDialog<void>(
         context: context,
@@ -18,11 +27,19 @@ class CardAvailableTime extends StatelessWidget {
           return CustomAlertDialog(
               title: 'Cancelar Horário',
               subtitle: 'Deseja mesmo cancelar o horário?',
-              onChange: () {});
+              onChange: () async {
+                print(time.id);
+                var res = await _availableTimeRepository.remove(time.id!, null);
+                if (res.success == true) {
+                  onAction();
+                } else if (res.errorMessage != null) {
+                  handleErrorMessage(res.errorMessage!);
+                }
+              });
         },
       );
     }
-    
+
     return Card(
       elevation: 0,
       margin: EdgeInsets.zero,

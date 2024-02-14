@@ -19,4 +19,10 @@ class ApiService {
 
     return response.data;
   }
+  
+  Future<Map<String, dynamic>> delete(String path, Object? data, Map<String, dynamic>? headers) async {
+    var response = await dio.delete(path, data: data, options: Options(headers: headers));
+
+    return response.data;
+  }
 }

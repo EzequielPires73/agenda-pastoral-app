@@ -25,7 +25,6 @@ class _SelectMemberState extends State<SelectMember> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     findMembers();
   }
@@ -45,8 +44,10 @@ class _SelectMemberState extends State<SelectMember> {
             IconButton(onPressed: () {}, icon: const Icon(FeatherIcons.search)),
             IconButton(
               icon: const Icon(FeatherIcons.plus),
-              onPressed: () =>
-                  Navigator.pushNamed(context, '/admin/create_member'),
+              onPressed: () async {
+                   await Navigator.pushNamed(context, '/admin/create_member');
+                   await findMembers();
+              }
             ),
           ],
           title: const Text(

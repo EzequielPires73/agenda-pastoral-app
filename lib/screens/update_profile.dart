@@ -1,59 +1,36 @@
-import 'package:agenda_pastora_app/models/member.dart';
-import 'package:agenda_pastora_app/repositories/member_repository.dart';
 import 'package:agenda_pastora_app/utils/colors.dart';
 import 'package:agenda_pastora_app/widgets/buttons/button_primary.dart';
 import 'package:agenda_pastora_app/widgets/buttons/button_secondary.dart';
 import 'package:agenda_pastora_app/widgets/form_components/text_field_primary.dart';
 import 'package:flutter/material.dart';
 
-class CreateMemberAdminPage extends StatefulWidget {
-  const CreateMemberAdminPage({super.key});
+class UpdateProfilePage extends StatefulWidget {
+  const UpdateProfilePage({super.key});
 
   @override
-  State<CreateMemberAdminPage> createState() => _CreateMemberAdminPageState();
+  State<UpdateProfilePage> createState() => _UpdateProfilePageState();
 }
 
-class _CreateMemberAdminPageState extends State<CreateMemberAdminPage> {
-  final MemberRepoistory _memberRepoistory = MemberRepoistory();
+class _UpdateProfilePageState extends State<UpdateProfilePage> {
   final email = TextEditingController();
   final password = TextEditingController();
   final name = TextEditingController();
   final phone = TextEditingController();
   final cpf = TextEditingController();
-  bool loading = false;
-
-  void handleErrorMessage(String message) {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(message)));
-  }
-
-  Future<void> handleSubmit() async {
-    setState(() {
-      loading = true;
-    });
-    var res = await _memberRepoistory.create(Member(name: name.text, email: email.text, phone: phone.text, cpf: cpf.text, password: password.text));
-
-    if(res.errorMessage != null) handleErrorMessage(res.errorMessage!);
-    if(res.member != null) Navigator.pop(context);
-  
-    setState(() {
-      loading = false;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: ColorPalette.primary,
-          iconTheme: const IconThemeData(color: Colors.white),
-          toolbarHeight: 80,
-          title: const Text(
-            'Cadastrar membro',
-            style: TextStyle(color: Colors.white),
-          ),
+        backgroundColor: ColorPalette.primary,
+        iconTheme: const IconThemeData(color: Colors.white),
+        toolbarHeight: 80,
+        title: const Text(
+          'Editar Perfil',
+          style: TextStyle(color: Colors.white),
         ),
-        body: SingleChildScrollView(
+      ),
+      body: SingleChildScrollView(
         child: Container(
           alignment: Alignment.center,
           width: double.infinity,
@@ -90,15 +67,11 @@ class _CreateMemberAdminPageState extends State<CreateMemberAdminPage> {
               const SizedBox(
                 height: 24,
               ),
-              TextFieldPrimary(
-                  controller: password,
-                  label: 'Password',
-                  placeholder: 'Insira sua senha',
-                  obscureText: true),
+              ButtonPrimary(onPressed: () => {}, title: 'Atualizar'),
               const SizedBox(
                 height: 24,
               ),
-              ButtonPrimary(onPressed: handleSubmit, isLoading: loading, title: 'Cadastrar'),
+              ButtonSecondary(onPressed: () => {}, title: 'Atualizar senha'),
             ],
           ),
         ),

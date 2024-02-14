@@ -45,12 +45,14 @@ class _SelectResponsibleState extends State<SelectResponsible> {
             IconButton(onPressed: () {}, icon: const Icon(FeatherIcons.search)),
             IconButton(
               icon: const Icon(FeatherIcons.plus),
-              onPressed: () =>
-                  Navigator.pushNamed(context, '/admin/create_member'),
+              onPressed: () async {
+                  await Navigator.pushNamed(context, '/admin/create_responsible');
+                  await findResponsible();
+              }
             ),
           ],
           title: const Text(
-            'Selecione o membro',
+            'Selecione o responsável',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
           ),
         ),

@@ -1,6 +1,8 @@
 import 'package:agenda_pastora_app/controllers/appointment_controller.dart';
 import 'package:agenda_pastora_app/helpers/date.dart';
-import 'package:agenda_pastora_app/models/available_time.dart';
+import 'package:agenda_pastora_app/models/appointment.dart';
+import 'package:agenda_pastora_app/repositories/appointment_repository.dart';
+import 'package:agenda_pastora_app/repositories/available_time_repository.dart';
 import 'package:agenda_pastora_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -9,7 +11,8 @@ import 'package:table_calendar/table_calendar.dart';
 class CustomCalendarAdmin extends StatefulWidget {
   final DateTime selectedDate;
   final Function(DateTime selectedDate) onChange;
-  const CustomCalendarAdmin({super.key, required this.selectedDate, required this.onChange});
+  const CustomCalendarAdmin(
+      {super.key, required this.selectedDate, required this.onChange});
 
   @override
   State<CustomCalendarAdmin> createState() => _CustomCalendarAdminState();
@@ -17,20 +20,40 @@ class CustomCalendarAdmin extends StatefulWidget {
 
 class _CustomCalendarAdminState extends State<CustomCalendarAdmin> {
   late final AppointmentController controller;
+  final AppointmentRepository _appointmentRepository =
+      AppointmentRepository();
+  bool loading = true;
   DateTime _focusedDay = DateTime.now();
   CalendarFormat _calendarFormat = CalendarFormat.month;
+  List<Appointment> appointments = [];
+
+  Future<void> findAppointments() async {
+    setState(() {
+      loading = true;
+    });
+    var res = await _appointmentRepository.findAll(null, null, null);
+    setState(() {
+      appointments = res;
+      loading = false;
+    });
+  }
 
   @override
   void initState() {
+    findAppointments();
     super.initState();
     controller = context.read<AppointmentController>();
+  }
+
+  List<dynamic> _getEventsForDay(DateTime day) {
+    return appointments.where((element) => element.date == formatDateSelected(day)).toList();
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 25),
-      child: TableCalendar(
+        padding: const EdgeInsets.symmetric(horizontal: 25),
+        child: loading == true ? Container(child: Text('Carregando...'),) : TableCalendar(
             firstDay: DateTime.now(),
             lastDay: DateTime.utc(2030, 3, 14),
             focusedDay: _focusedDay,
@@ -75,6 +98,9 @@ class _CustomCalendarAdminState extends State<CustomCalendarAdmin> {
                 _focusedDay = focusedDay;
               });
             },
+            eventLoader: (day) {
+              return _getEventsForDay(day);
+            },
             calendarBuilders: CalendarBuilders(
               headerTitleBuilder: (context, day) {
                 return Center(
@@ -94,8 +120,6 @@ class _CustomCalendarAdminState extends State<CustomCalendarAdmin> {
                           fontSize: 12, color: ColorPalette.gray5)),
                 );
               },
-            )
-            )
-    );
+            )));
   }
 }

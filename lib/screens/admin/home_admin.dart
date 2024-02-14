@@ -36,7 +36,7 @@ class _HomeAdminPageState extends State<HomeAdminPage> {
       loading = true;
     });
     final shared = await SharedPreferences.getInstance();
-    final accessToken = shared.getString('member.access_token');
+    final accessToken = shared.getString('user.access_token');
 
     var reminders = await _repository.findAll('confirmado', accessToken, null);
     var pendents = await _repository.findAll('pendente', accessToken, null);

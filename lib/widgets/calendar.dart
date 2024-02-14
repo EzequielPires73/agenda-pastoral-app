@@ -16,8 +16,6 @@ class CustomCalendar extends StatefulWidget {
 class _CustomCalendarState extends State<CustomCalendar> {
   late final AppointmentController controller;
   CalendarFormat _calendarFormat = CalendarFormat.week;
-  DateTime _focusedDay = DateTime.now();
-  DateTime? _selectedDay = DateTime.now();
 
   bool _isDisabled(DateTime day) {
     return !widget.availableTimes.any((availableTime) =>

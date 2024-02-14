@@ -52,7 +52,7 @@ class AvailableTimeController extends ChangeNotifier {
       var res =
           await _availableTimeRepository.create(date, start, end, accessToken);
 
-      if (!res) {
+      if (res.success != true) {
         error = true;
         notifyListeners();
       }

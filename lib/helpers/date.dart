@@ -109,3 +109,7 @@ String formatDayWeek(DateTime day) {
 String formatTimeSelected(TimeOfDay time) {
   return '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}:00';
 }
+
+String formatTimeHourMinute(TimeOfDay time) {
+  return '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
+}

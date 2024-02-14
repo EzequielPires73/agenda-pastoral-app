@@ -3,6 +3,13 @@ import 'package:agenda_pastora_app/models/available_time.dart';
 import 'package:agenda_pastora_app/services/api_service.dart';
 import 'package:flutter/material.dart';
 
+class AvailableTimeCreationResult {
+  bool? success;
+  String? errorMessage;
+
+  AvailableTimeCreationResult({this.success, this.errorMessage});
+}
+
 class AvailableTimeRepository {
   final ApiService _apiService = ApiService();
 
@@ -23,7 +30,7 @@ class AvailableTimeRepository {
     }
   }
 
-  Future<bool> create(
+  Future<AvailableTimeCreationResult> create(
       DateTime date, TimeOfDay start, TimeOfDay end, String? token) async {
     try {
       var res = await _apiService.post('available-times', {
@@ -37,12 +44,30 @@ class AvailableTimeRepository {
       print(res);
 
       if (res['success']) {
-        return true;
+        return AvailableTimeCreationResult(success: true);
       } else {
-        return false;
+        return throw new Exception(res['message']);
       }
     } catch (error) {
-      return false;
+      return AvailableTimeCreationResult(errorMessage: error.toString());
+    }
+  }
+
+  Future<AvailableTimeCreationResult> remove(int id, String? token) async {
+    try {
+      var res = await _apiService.delete('available-times/$id', null , {
+        "authorization": 'Bearer $token'
+      });
+
+      print(res);
+
+      if (res['success']) {
+        return AvailableTimeCreationResult(success: true);
+      } else {
+        return throw new Exception(res['message']);
+      }
+    } catch (error) {
+      return AvailableTimeCreationResult(errorMessage: error.toString());
     }
   }
 }

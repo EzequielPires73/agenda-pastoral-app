@@ -32,6 +32,7 @@ class _AppointmentsAdminPageState extends State<AppointmentsAdminPage> {
   final AppointmentRepository _repository = AppointmentRepository();
   final AvailableTimeRepository _availableTimeRepository =
       AvailableTimeRepository();
+
   List<Appointment> appointments = [];
   List<AvailableTime> availableTimes = [];
   bool loading = false;
@@ -50,7 +51,7 @@ class _AppointmentsAdminPageState extends State<AppointmentsAdminPage> {
       loading = true;
     });
     final shared = await SharedPreferences.getInstance();
-    final accessToken = shared.getString('member.access_token');
+    final accessToken = shared.getString('user.access_token');
 
     var resultsAppointments =
         await _repository.findAll(null, accessToken, formatDateSelected(date));
@@ -138,7 +139,7 @@ class _AppointmentsAdminPageState extends State<AppointmentsAdminPage> {
                         childAspectRatio: 1.4,
                         children: availableTimes[0]
                             .times
-                            .map((e) => CardAvailableTime(time: e))
+                            .map((e) => CardAvailableTime(time: e, onAction: () => findAppointments(selectedDate),))
                             .toList(),
                       )
                     : const SliverToBoxAdapter(
@@ -195,10 +196,14 @@ class _AppointmentsAdminPageState extends State<AppointmentsAdminPage> {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return ModalCreateAvailableTime(
-            onSubmit: (start, end) => availableTimeController
-                .createAvailableTime(selectedDate, start, end));
+            onSubmit: (start, end) => createAvailableTime(start, end));
       },
     );
+  }
+
+  void handleErrorMessage(String message) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
   }
 
   Future<void> createAvailableTime(TimeOfDay start, TimeOfDay end) async {
@@ -214,7 +219,10 @@ class _AppointmentsAdminPageState extends State<AppointmentsAdminPage> {
       var res = await _availableTimeRepository.create(
           selectedDate, start, end, accessToken);
 
-      if (res) await findAppointments(selectedDate);
+      print(res);
+
+      if(res.errorMessage != null) handleErrorMessage(res.errorMessage!);
+      if (res.success == true) await findAppointments(selectedDate);
     } catch (e) {
       setState(() {
         error = true;

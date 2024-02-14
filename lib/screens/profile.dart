@@ -33,7 +33,7 @@ class _ProfilePageState extends State<ProfilePage> {
         child: Column(children: [
           const ProfileItem(
               icon: FeatherIcons.edit,
-              path: '/edit_user',
+              path: '/update_profile',
               title: 'Editar Perfil'),
           const SizedBox(
             height: 24,
@@ -82,7 +82,7 @@ class ProfileItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onAction ?? () => Navigator.pushReplacementNamed(context, path),
+      onTap: onAction ?? () => Navigator.pushNamed(context, path),
       child: Row(
         children: [
           Icon(icon, color: ColorPalette.gray3),

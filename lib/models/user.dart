@@ -18,27 +18,38 @@ abstract class UserAbstract {
   });
 
   toJson() {
-    return {
-      "id": id,
-      "name": name,
-      "email": email,
-      "phone" : phone,
-    };
+    if (id != null) {
+      return {
+        "id": id,
+        "name": name,
+        "email": email,
+        "phone": phone,
+      };
+    } else {
+      return {
+        "name": name,
+        "email": email,
+        "phone": phone,
+        "password": password,
+      };
+    }
   }
 }
+
+enum UserType { admin, shepherd, shepherd_president }
 
 class User extends UserAbstract {
   String? type;
   List? appointments;
 
   User({
-    required String id,
     required String name,
     required String email,
     required String phone,
     String? password,
     String? avatar,
     String? notificationToken,
+    String? id,
     this.type,
     this.appointments,
   }) : super(
@@ -62,5 +73,25 @@ class User extends UserAbstract {
       type: json['type'],
       notificationToken: json['notificationToken'],
     );
+  }
+
+  toJson() {
+    if (id != null) {
+      return {
+        "id": id,
+        "name": name,
+        "email": email,
+        "phone": phone,
+        "type": type,
+      };
+    } else {
+      return {
+        "name": name,
+        "email": email,
+        "phone": phone,
+        "password": password,
+        "type": type,
+      };
+    }
   }
 }
