@@ -11,6 +11,7 @@ import 'package:agenda_pastora_app/widgets/buttons/button_primary.dart';
 import 'package:agenda_pastora_app/widgets/buttons/button_secondary.dart';
 import 'package:agenda_pastora_app/widgets/calendar.dart';
 import 'package:agenda_pastora_app/widgets/cards/card-member.dart';
+import 'package:agenda_pastora_app/widgets/cards/card-time.dart';
 import 'package:agenda_pastora_app/widgets/dialogs/select_member.dart';
 import 'package:agenda_pastora_app/widgets/form_components/text_field_primary.dart';
 import 'package:agenda_pastora_app/widgets/member_select.dart';
@@ -198,42 +199,20 @@ class _CreateAppointmentAdminPageState
                                         .appointmentsCategories.isNotEmpty &&
                                     controller.category != null
                                 ? SliverGrid.count(
-                                    crossAxisCount: 4,
+                                    crossAxisCount: 2,
                                     childAspectRatio: 2,
                                     crossAxisSpacing:
                                         8.0, // Espaçamento entre colunas
                                     mainAxisSpacing: 8.0,
                                     children: List.generate(
                                       controller.times.length,
-                                      (index) => InkWell(
-                                        onTap: () =>
+                                      (index) => CardTime(
+                                        time: controller.times[index],
+                                        active: controller.times[index].start ==
+                                            controller.time?.start,
+                                        onAction: () =>
                                             controller.changeTimeSelected(
                                                 controller.times[index]),
-                                        child: Container(
-                                          alignment: Alignment.center,
-                                          padding: const EdgeInsets.all(12),
-                                          decoration: BoxDecoration(
-                                            color:
-                                                controller.times[index].start ==
-                                                        controller.time?.start
-                                                    ? ColorPalette.primaryLight
-                                                    : ColorPalette.input,
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                          ),
-                                          child: Text(
-                                            controller.times[index].start,
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.w500,
-                                              color: controller
-                                                          .times[index].start ==
-                                                      controller.time?.start
-                                                  ? ColorPalette.primary
-                                                  : ColorPalette.gray5,
-                                            ),
-                                          ),
-                                        ),
                                       ),
                                     ),
                                   )

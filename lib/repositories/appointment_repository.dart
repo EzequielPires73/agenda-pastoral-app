@@ -37,6 +37,8 @@ class AppointmentRepository {
       var res = await _apiService.get(
           path, {"authorization": "Bearer $token"});
 
+      print(res);
+
       if (res['success']) {
         var results = res['results'] as List;
 
@@ -47,6 +49,7 @@ class AppointmentRepository {
       }
       return [];
     } catch (error) {
+      print(error);
       return [];
     }
   }

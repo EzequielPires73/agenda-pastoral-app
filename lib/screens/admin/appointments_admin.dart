@@ -143,7 +143,7 @@ class _AppointmentsAdminPageState extends State<AppointmentsAdminPage> {
                             .toList(),
                       )
                     : const SliverToBoxAdapter(
-                        child: Text('Nenhum tempo livre foi encontrado.'),
+                        child: Text('Nenhum horário livre foi encontrado.'),
                       ),
           ),
           SliverToBoxAdapter(

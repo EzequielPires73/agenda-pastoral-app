@@ -6,6 +6,7 @@ import 'package:agenda_pastora_app/repositories/available_time_repository.dart';
 import 'package:agenda_pastora_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CustomCalendarAdmin extends StatefulWidget {
@@ -31,7 +32,10 @@ class _CustomCalendarAdminState extends State<CustomCalendarAdmin> {
     setState(() {
       loading = true;
     });
-    var res = await _appointmentRepository.findAll(null, null, null);
+    final shared = await SharedPreferences.getInstance();
+    final accessToken = shared.getString('user.access_token');
+    var res = await _appointmentRepository.findAll(null, accessToken, null);
+    print(res);
     setState(() {
       appointments = res;
       loading = false;
