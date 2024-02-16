@@ -32,11 +32,26 @@ class MemberRepoistory {
   Future<MemberCreationResult> create(Member memberData) async {
     try {
       var res = await _apiService.post('members', memberData.toJson(), null);
-      print(res['result']);
 
       if (res['success'] && res['result'] != null) {
         Member member = Member.fromJson(res['result']);
-        print(member);
+
+        return MemberCreationResult(member: member);
+      } else {
+        return MemberCreationResult(errorMessage: res['message']);
+      }
+    } catch (error) {
+      print(error);
+      return MemberCreationResult(errorMessage: error.toString());
+    }
+  }
+
+  Future<MemberCreationResult> update(String id, Member memberData) async {
+    try {
+      var res = await _apiService.patch('members/$id', memberData.toJson(), null);
+
+      if (res['success'] && res['result'] != null) {
+        Member member = Member.fromJson(res['result']);
 
         return MemberCreationResult(member: member);
       } else {

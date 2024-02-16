@@ -50,6 +50,27 @@ class _ProfilePageState extends State<ProfilePage> {
           const SizedBox(
             height: 24,
           ),
+          const ProfileItem(
+              icon: FeatherIcons.box,
+              path: '/admin/categories',
+              title: 'Categorias de agendamento'),
+          const SizedBox(
+            height: 24,
+          ),
+          const ProfileItem(
+              icon: FeatherIcons.users,
+              path: '/admin/members',
+              title: 'Membros'),
+          const SizedBox(
+            height: 24,
+          ),
+          const ProfileItem(
+              icon: FeatherIcons.userCheck,
+              path: '/admin/users',
+              title: 'Usuários do sistema'),
+          const SizedBox(
+            height: 24,
+          ),
           Consumer<AuthController>(
             builder: (context, value, child) => ProfileItem(
                 icon: FeatherIcons.logOut,

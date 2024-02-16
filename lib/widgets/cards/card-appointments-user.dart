@@ -117,7 +117,7 @@ class CardAppointmentsUser extends StatelessWidget {
                     height: 4,
                   ),
                   Text(
-                    appointment.responsible?.name ?? '',
+                    'AD Catalão',
                     style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
@@ -140,10 +140,8 @@ class CardAppointmentsUser extends StatelessWidget {
                 ],
               ),
               Avatar(
-                image: appointment.responsible?.avatar?.isNotEmpty == true
-                    ? appointment.responsible?.avatar
-                    : null,
-                name: appointment.responsible?.name ?? '',
+                image: null,
+                name: 'AD Catalão',
               )
             ],
           ),

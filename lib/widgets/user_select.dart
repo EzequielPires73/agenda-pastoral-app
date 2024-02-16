@@ -5,6 +5,7 @@ import 'package:agenda_pastora_app/widgets/avatar.dart';
 import 'package:agenda_pastora_app/widgets/cards/card-member.dart';
 import 'package:agenda_pastora_app/widgets/dialogs/select_member.dart';
 import 'package:agenda_pastora_app/widgets/dialogs/select_responsible.dart';
+import 'package:agenda_pastora_app/widgets/typography/label.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 
@@ -48,14 +49,7 @@ class _UserSelectState extends State<UserSelect> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            widget.title,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w500,
-              color: ColorPalette.gray3,
-            ),
-          ),
+          Label(text: widget.title),
           const SizedBox(
             height: 8,
           ),
@@ -94,9 +88,9 @@ class _UserSelectState extends State<UserSelect> {
                         Text(
                           widget.placeholder,
                           style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            color: ColorPalette.gray5,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w300,
+                            color: ColorPalette.gray7,
                           ),
                         ),
                         const Icon(

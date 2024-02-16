@@ -32,11 +32,26 @@ class UserRepoistory {
   Future<UserCreationResult> create(User UserData) async {
     try {
       var res = await _apiService.post('users', UserData.toJson(), null);
-      print(res['result']);
 
       if (res['success'] && res['result'] != null) {
         User user = User.fromJson(res['result']);
-        print(User);
+
+        return UserCreationResult(user: user);
+      } else {
+        return UserCreationResult(errorMessage: res['message']);
+      }
+    } catch (error) {
+      print(error);
+      return UserCreationResult(errorMessage: error.toString());
+    }
+  }
+  
+  Future<UserCreationResult> update(String id, User UserData) async {
+    try {
+      var res = await _apiService.patch('users/$id', UserData.toJson(), null);
+
+      if (res['success'] && res['result'] != null) {
+        User user = User.fromJson(res['result']);
 
         return UserCreationResult(user: user);
       } else {

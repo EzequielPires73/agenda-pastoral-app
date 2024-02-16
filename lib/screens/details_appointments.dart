@@ -168,8 +168,7 @@ class _DetailsAppointmentsState extends State<DetailsAppointments> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            appointment?.responsible?.name ??
-                                                'AD Catalão',
+                                            'AD Catalão',
                                             style: const TextStyle(
                                                 fontSize: 18,
                                                 fontWeight: FontWeight.w500),
@@ -179,12 +178,7 @@ class _DetailsAppointmentsState extends State<DetailsAppointments> {
                                                   ''),
                                         ],
                                       ),
-                                      Avatar(
-                                          image:
-                                              appointment?.responsible?.avatar,
-                                          name:
-                                              appointment?.responsible?.name ??
-                                                  'AD Catalão'),
+                                      Avatar(image: null, name: 'AD Catalão'),
                                     ],
                                   );
                                 } else if (value.user != null &&
@@ -366,6 +360,7 @@ class _DetailsAppointmentsState extends State<DetailsAppointments> {
       },
     );
   }
+
   Future<void> _showMyDialogFinish() async {
     return showDialog<void>(
       context: context,

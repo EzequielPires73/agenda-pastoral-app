@@ -5,6 +5,7 @@ import 'package:agenda_pastora_app/models/available_time.dart';
 import 'package:agenda_pastora_app/models/member.dart';
 import 'package:agenda_pastora_app/models/user.dart';
 import 'package:agenda_pastora_app/utils/colors.dart';
+import 'package:agenda_pastora_app/widgets/alerts/alert_message.dart';
 import 'package:agenda_pastora_app/widgets/buttons/button_cancel.dart';
 import 'package:agenda_pastora_app/widgets/buttons/button_confirm.dart';
 import 'package:agenda_pastora_app/widgets/buttons/button_primary.dart';
@@ -16,6 +17,7 @@ import 'package:agenda_pastora_app/widgets/dialogs/select_member.dart';
 import 'package:agenda_pastora_app/widgets/form_components/text_field_primary.dart';
 import 'package:agenda_pastora_app/widgets/member_select.dart';
 import 'package:agenda_pastora_app/widgets/modals/modal-create-available-time.dart';
+import 'package:agenda_pastora_app/widgets/typography/label.dart';
 import 'package:agenda_pastora_app/widgets/user_select.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -40,10 +42,17 @@ class _CreateAppointmentAdminPageState
   int? time;
   bool loading = true;
 
+  void handleErrorMessage(String message) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
+  }
+
   _successListener() {
     if (controller.state == AppointmentState.success) {
       Navigator.pushReplacementNamed(context, '/details_appointments',
           arguments: {"id": controller.appointment?.id});
+    } else if (controller.state == AppointmentState.error) {
+      handleErrorMessage(controller.errorMsg);
     }
   }
 
@@ -65,6 +74,7 @@ class _CreateAppointmentAdminPageState
   @override
   void dispose() {
     controller.removeListener(_successListener);
+    controller.onDispose();
     super.dispose();
   }
 
@@ -111,13 +121,8 @@ class _CreateAppointmentAdminPageState
                       child: Container(
                         padding: const EdgeInsets.only(
                             left: 25, right: 25, top: 32, bottom: 16),
-                        child: const Text(
-                          'Motivo do agendamento',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                            color: ColorPalette.gray3,
-                          ),
+                        child: Label(
+                          text: 'Motivo do agendamento',
                         ),
                       ),
                     ),
@@ -177,13 +182,9 @@ class _CreateAppointmentAdminPageState
                       child: Container(
                         padding: const EdgeInsets.only(
                             left: 25, right: 25, top: 32, bottom: 16),
-                        child: Text(
-                          'Horário do agendamento ${formatDateDayMonth(controller.selectedDay)}',
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                            color: ColorPalette.gray3,
-                          ),
+                        child: Label(
+                          text:
+                              'Horário do agendamento - ${formatDateDayMonth(controller.selectedDay)}',
                         ),
                       ),
                     ),
@@ -217,32 +218,31 @@ class _CreateAppointmentAdminPageState
                                     ),
                                   )
                                 : SliverToBoxAdapter(
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 16,
-                                        vertical: 16,
-                                      ),
-                                      decoration: BoxDecoration(
-                                          color: ColorPalette.redLight,
-                                          borderRadius:
-                                              BorderRadius.circular(6)),
-                                      child: const Text(
-                                        'Selecione um motivo do agendamento',
-                                        style: TextStyle(
-                                            color: ColorPalette.red,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500),
-                                      ),
+                                    child: AlertMessage(
+                                      message:
+                                          'Selecione uma data e um motivo para o agendamento',
                                     ),
                                   ),
                           ),
+                    controller.state != AppointmentState.loaddingTimes &&
+                            controller.times.isEmpty &&
+                            controller.category != null
+                        ? SliverToBoxAdapter(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 25),
+                              child: AlertMessage(
+                                message: 'Nenhum horário disponível encontrado',
+                              ),
+                            ),
+                          )
+                        : SliverToBoxAdapter(),
                     SliverToBoxAdapter(
                       child: Container(
                           padding: EdgeInsets.symmetric(horizontal: 25),
                           margin: EdgeInsets.only(top: 16),
                           child: ButtonPrimary(
                               onPressed: showMyDialogCreateAvaibleTime,
-                              title: 'Selecionar Horário Dinâmico')),
+                              title: 'Adicionar Horário Dinâmico')),
                     ),
                     SliverToBoxAdapter(
                       child: Column(
@@ -287,7 +287,7 @@ class _CreateAppointmentAdminPageState
                             ),
                             Expanded(
                               child: ButtonConfirm(
-                                  onPressed: () => controller.createAppointment(
+                                  onPressed: () => controller.createAppointmentByAdmin(
                                       memberSelected: member,
                                       responsibleSelected: user),
                                   title: 'Solicitar'),
@@ -309,9 +309,16 @@ class _CreateAppointmentAdminPageState
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return ModalCreateAvailableTime(
-            onSubmit: (start, end) => Time(
+          onSubmit: (start, end) => controller.changeTimes(
+            [
+              ...controller.times,
+              Time(
                 start: formatTimeHourMinute(start),
-                end: formatTimeHourMinute(end)));
+                end: formatTimeHourMinute(end),
+              ),
+            ],
+          ),
+        );
       },
     );
   }

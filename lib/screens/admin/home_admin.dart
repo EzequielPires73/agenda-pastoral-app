@@ -130,6 +130,7 @@ class _HomeAdminPageState extends State<HomeAdminPage> {
           color: Colors.white,
           onPressed: () async {
             await Navigator.pushNamed(context, '/admin/create_appointments');
+            await findAppointments();
           },
         ),
       ),

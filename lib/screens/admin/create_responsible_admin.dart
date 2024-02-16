@@ -68,7 +68,7 @@ class _CreateResponsibleAdminPageState
         child: Container(
           alignment: Alignment.center,
           width: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 48),
+          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 24),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,

@@ -21,36 +21,43 @@ class Header extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Olá, ${user?.name}',
-                style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.w500),
-              ),
-              RichText(
-                text: const TextSpan(
-                  style: TextStyle(color: Colors.white, fontSize: 16),
-                  children: [
-                    TextSpan(text: 'Bem-vindo ao '),
-                    TextSpan(
-                      text: 'Agenda Pastoral',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                    ),
-                  ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Olá, ${user?.name}',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.w500),
                 ),
-              ),
-            ],
+                RichText(
+                  text: const TextSpan(
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                    children: [
+                      TextSpan(text: 'Bem-vindo ao '),
+                      TextSpan(
+                        text: 'Agenda Pastoral',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 16),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
-          user != null ? Avatar(
-            image: user.avatar?.isNotEmpty == true ? user.avatar : null,
-            name: user.name,
-            color: Colors.white,
-          ) : Container()
+          const SizedBox(width: 12,),
+          user != null
+              ? Avatar(
+                  image: user.avatar?.isNotEmpty == true ? user.avatar : null,
+                  name: user.name,
+                  color: Colors.white,
+                )
+              : Container()
         ],
       ),
     );

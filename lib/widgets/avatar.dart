@@ -9,13 +9,15 @@ class Avatar extends StatelessWidget {
       {super.key, required this.image, this.color, required this.name});
 
   String abbreviateName(String fullName) {
-    List<String> words = fullName.split(' ');
+    List<String> words = fullName.split(' ').where((element) => element.toLowerCase() != 'de' && element.toLowerCase() != 'e').toList();
     String abbreviation = '';
+    int i = 1;
 
     for (String word in words) {
-      if (word.isNotEmpty) {
+      if (word.isNotEmpty && i <= 2) {
         abbreviation += word[0];
       }
+      i++;
     }
 
     return abbreviation.toUpperCase();

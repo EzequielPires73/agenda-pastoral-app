@@ -19,6 +19,20 @@ class AuthController extends ChangeNotifier {
   User? user;
   var userState = UserState.idle;
 
+  Future<void> changeMember(Member newMember) async {
+    final shared = await SharedPreferences.getInstance();
+    await shared.setString('member', jsonEncode(newMember));
+    member = newMember;
+    notifyListeners();
+  }
+
+  Future<void> changeUser(User newUser) async {
+    final shared = await SharedPreferences.getInstance();
+    await shared.setString('user', jsonEncode(newUser));
+    user = newUser;
+    notifyListeners();
+  }
+
   Future<void> singinMember(String email, String password) async {
     isLoading = true;
     notifyListeners();
@@ -75,7 +89,7 @@ class AuthController extends ChangeNotifier {
         notifyListeners();
       }
     } catch (error) {
-      errorMsg = error.toString();
+      errorMsg = 'Login inválido, por favor, tente novamente.';
       state = AuthState.error;
       notifyListeners();
     } finally {

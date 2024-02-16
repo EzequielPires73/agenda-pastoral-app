@@ -31,10 +31,17 @@ class _CreateAppointmentsPageState extends State<CreateAppointmentsPage> {
   int? time;
   bool loading = true;
 
+  void handleErrorMessage(String message) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
+  }
+
   _successListener() {
     if (controller.state == AppointmentState.success) {
       Navigator.pushReplacementNamed(context, '/details_appointments',
           arguments: {"id": controller.appointment?.id});
+    } else if (controller.state == AppointmentState.error) {
+      handleErrorMessage(controller.errorMsg);
     }
   }
 
@@ -56,6 +63,7 @@ class _CreateAppointmentsPageState extends State<CreateAppointmentsPage> {
   @override
   void dispose() {
     controller.removeListener(_successListener);
+    controller.onDispose();
     super.dispose();
   }
 
@@ -92,7 +100,8 @@ class _CreateAppointmentsPageState extends State<CreateAppointmentsPage> {
                         child: TextFieldPrimary(
                           controller: controller.observation,
                           label: 'Assunto do agendamento',
-                          placeholder: 'Descreva brevemente o assunto do agendamento',
+                          placeholder:
+                              'Descreva brevemente o assunto do agendamento',
                           maxLines: 4,
                         ),
                       ),
@@ -251,7 +260,8 @@ class _CreateAppointmentsPageState extends State<CreateAppointmentsPage> {
                           children: [
                             Expanded(
                               child: ButtonCancel(
-                                  onPressed: () => Navigator.pop(context), title: 'Cancelar'),
+                                  onPressed: () => Navigator.pop(context),
+                                  title: 'Cancelar'),
                             ),
                             const SizedBox(
                               width: 8,

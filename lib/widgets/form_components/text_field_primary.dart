@@ -38,13 +38,14 @@ class TextFieldPrimary extends StatelessWidget {
           validator: (value) {
             if (required == true && (value == '' || value == null)) {
               return 'Preencha um valor';
-            }
+            } else return null;
           },
           controller: controller,
           inputFormatters: formatter,
           obscureText: obscureText,
           maxLines: maxLines ?? 1,
           decoration: InputDecoration(
+              hintStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w300, color: ColorPalette.gray7),
               contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
               hintText: placeholder ?? '',
               fillColor: ColorPalette.input,
