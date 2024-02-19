@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 class AppointmentCategoryCreationResult {
   AppointmentCategory? category;
   String? errorMessage;
+  bool? success;
 
   AppointmentCategoryCreationResult({this.category, this.errorMessage});
 }
@@ -62,13 +63,29 @@ class AppointmentCategoryRepository {
         {"authorization": "Bearer $token"},
       );
 
-      if(res['success']) {
-        return AppointmentCategoryCreationResult(category: AppointmentCategory.fromJson(res['result']));
+      if (res['success']) {
+        return AppointmentCategoryCreationResult(
+            category: AppointmentCategory.fromJson(res['result']));
       } else {
         return AppointmentCategoryCreationResult(errorMessage: res['message']);
       }
     } catch (error) {
       return AppointmentCategoryCreationResult(errorMessage: error.toString());
+    }
+  }
+
+  Future<bool> remove(int id) async {
+    try {
+      var res =
+          await _apiService.delete('appointments-categories/$id', null, null);
+      if (res['success']) {
+        return true;
+      } else {
+        throw Exception(res['message']);
+      }
+    } catch (error) {
+      print(error);
+      return false;
     }
   }
 

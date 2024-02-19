@@ -59,8 +59,8 @@ class Header extends StatelessWidget {
               ],
             ),
           ),
-                const SizedBox(width: 12,),
-                IconButton(onPressed: () {}, padding: EdgeInsets.zero, icon: Icon(FeatherIcons.bell, color: Colors.white,))
+                /* const SizedBox(width: 12,),
+                IconButton(onPressed: () {}, padding: EdgeInsets.zero, icon: Icon(FeatherIcons.bell, color: Colors.white,)) */
           
         ],
       ),

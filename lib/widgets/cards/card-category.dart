@@ -1,16 +1,33 @@
 import 'package:agenda_pastora_app/models/appointment_category.dart';
+import 'package:agenda_pastora_app/repositories/appointment_category_repository.dart';
 import 'package:agenda_pastora_app/utils/colors.dart';
 import 'package:agenda_pastora_app/widgets/buttons/button_icon.dart';
+import 'package:agenda_pastora_app/widgets/custom_alert_dialog.dart';
 import 'package:agenda_pastora_app/widgets/typography/span.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 
 class CardCategory extends StatelessWidget {
   final AppointmentCategory category;
-  const CardCategory({super.key, required this.category});
+  final Function() onRemove;
+  CardCategory({super.key, required this.category, required this.onRemove});
 
   @override
   Widget build(BuildContext context) {
+    Future<void> showMyDialogCancel() async {
+      return showDialog<void>(
+        context: context,
+        barrierDismissible: false, // user must tap button!
+        builder: (BuildContext context) {
+          return CustomAlertDialog(
+              title: 'Remover Categoria',
+              subtitle: 'Deseja mesmo remover a categoria ${category.name}?',
+              onChange: onRemove,
+          );
+        }
+      );
+    }
+    
     return Card(
       elevation: 0,
       color: Colors.white,
@@ -42,7 +59,7 @@ class CardCategory extends StatelessWidget {
                 icon: FeatherIcons.trash,
                 color: ColorPalette.red,
                 background: ColorPalette.redLight,
-                onPressed: () {},
+                onPressed: showMyDialogCancel,
               ),
             ],
           )

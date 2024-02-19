@@ -9,6 +9,7 @@ import 'package:agenda_pastora_app/widgets/typography/h1.dart';
 import 'package:agenda_pastora_app/widgets/typography/label.dart';
 import 'package:agenda_pastora_app/widgets/typography/span.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class UserViewPage extends StatefulWidget {
   final User user;
@@ -48,9 +49,9 @@ class _UserViewPageState extends State<UserViewPage> {
               ),
               Row(
                 children: [
-                  Expanded(child: ButtonPrimary(onPressed: () {}, title: 'Ligar')),
+                  Expanded(child: ButtonPrimary(onPressed: () => _launchPhone(widget.user.phone), title: 'Ligar')),
                   const SizedBox(width: 16,),
-                  Expanded(child: ButtonSecondary(onPressed: () {}, title: 'Whatsapp')),
+                  Expanded(child: ButtonSecondary(onPressed: () => _openWhatsApp(widget.user.phone), title: 'Whatsapp')),
                 ],
               )
             ],
@@ -58,5 +59,24 @@ class _UserViewPageState extends State<UserViewPage> {
         ),
       ),
     );
+  }
+
+  _launchPhone(String phone) async {
+    final phoneNumber = Uri.parse('tel:${phone}');
+    print(phoneNumber);
+    if (await canLaunchUrl(phoneNumber)) {
+      await launchUrl(phoneNumber);
+    } else {
+      throw 'Não foi possível abrir o número de telefone.';
+    }
+  }
+
+  void _openWhatsApp(String phoneNumber) async {
+    final url = Uri.parse("https://api.whatsapp.com/send?phone=$phoneNumber");
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }

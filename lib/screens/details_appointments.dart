@@ -5,6 +5,8 @@ import 'package:agenda_pastora_app/models/appointment.dart';
 import 'package:agenda_pastora_app/models/member.dart';
 import 'package:agenda_pastora_app/models/user.dart';
 import 'package:agenda_pastora_app/repositories/appointment_repository.dart';
+import 'package:agenda_pastora_app/screens/admin/member_view.dart';
+import 'package:agenda_pastora_app/screens/admin/user_view.dart';
 import 'package:agenda_pastora_app/utils/colors.dart';
 import 'package:agenda_pastora_app/widgets/avatar.dart';
 import 'package:agenda_pastora_app/widgets/buttons/button_cancel.dart';
@@ -196,8 +198,17 @@ class _DetailsAppointmentsState extends State<DetailsAppointments> {
                                         height: 8,
                                       ),
                                       CardMember(
-                                          member: appointment!.member,
-                                          onTap: () {}),
+                                        member: appointment!.member,
+                                        onTap: () => Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                MemberViewPage(
+                                                    member:
+                                                        appointment!.member),
+                                          ),
+                                        ),
+                                      ),
                                       const SizedBox(
                                         height: 24,
                                       ),
@@ -210,8 +221,17 @@ class _DetailsAppointmentsState extends State<DetailsAppointments> {
                                         height: 8,
                                       ),
                                       CardMember(
-                                          member: appointment!.responsible!,
-                                          onTap: () {}),
+                                        member: appointment!.responsible!,
+                                        onTap: () => Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                UserViewPage(
+                                                    user:
+                                                        appointment!.responsible!),
+                                          ),
+                                        ),
+                                      ),
                                     ],
                                   );
                                 } else {

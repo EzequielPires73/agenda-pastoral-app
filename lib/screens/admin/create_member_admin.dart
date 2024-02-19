@@ -16,6 +16,7 @@ class CreateMemberAdminPage extends StatefulWidget {
 
 class _CreateMemberAdminPageState extends State<CreateMemberAdminPage> {
   final MemberRepoistory _memberRepoistory = MemberRepoistory();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final email = TextEditingController();
   final password = TextEditingController();
   final name = TextEditingController();
@@ -32,15 +33,17 @@ class _CreateMemberAdminPageState extends State<CreateMemberAdminPage> {
     setState(() {
       loading = true;
     });
-    var res = await _memberRepoistory.create(Member(
-        name: name.text,
-        email: email.text,
-        phone: phone.text,
-        cpf: cpf.text,
-        password: password.text));
+    if (_formKey.currentState!.validate()) {
+      var res = await _memberRepoistory.create(Member(
+          name: name.text,
+          email: email.text,
+          phone: phone.text,
+          cpf: cpf.text,
+          password: password.text));
 
-    if (res.errorMessage != null) handleErrorMessage(res.errorMessage!);
-    if (res.member != null) Navigator.pop(context);
+      if (res.errorMessage != null) handleErrorMessage(res.errorMessage!);
+      if (res.member != null) Navigator.pop(context);
+    }
 
     setState(() {
       loading = false;
@@ -64,57 +67,68 @@ class _CreateMemberAdminPageState extends State<CreateMemberAdminPage> {
           alignment: Alignment.center,
           width: double.infinity,
           padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextFieldPrimary(
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextFieldPrimary(
                   controller: name,
                   label: 'Nome',
-                  placeholder: 'Insira seu nome completo'),
-              const SizedBox(
-                height: 24,
-              ),
-              TextFieldPrimary(
-                controller: phone,
-                label: 'Telefone',
-                placeholder: 'Insira seu telefone',
-                formatter: [phoneFormatter],
-                type: TextInputType.number,
-              ),
-              const SizedBox(
-                height: 24,
-              ),
-              TextFieldPrimary(
-                controller: cpf,
-                label: 'CPF',
-                placeholder: 'Insira seu CPF',
-                formatter: [cpfFormatter],
-                type: TextInputType.number,
-              ),
-              const SizedBox(
-                height: 24,
-              ),
-              TextFieldPrimary(
+                  placeholder: 'Insira seu nome completo',
+                  required: true,
+                ),
+                const SizedBox(
+                  height: 24,
+                ),
+                TextFieldPrimary(
+                  controller: phone,
+                  label: 'Telefone',
+                  placeholder: 'Insira seu telefone',
+                  formatter: [phoneFormatter],
+                  type: TextInputType.number,
+                  required: true,
+                ),
+                const SizedBox(
+                  height: 24,
+                ),
+                TextFieldPrimary(
+                  controller: cpf,
+                  label: 'CPF',
+                  placeholder: 'Insira seu CPF',
+                  formatter: [cpfFormatter],
+                  type: TextInputType.number,
+                  required: true,
+                ),
+                const SizedBox(
+                  height: 24,
+                ),
+                TextFieldPrimary(
                   controller: email,
                   label: 'Email',
-                  placeholder: 'Insira seu email'),
-              const SizedBox(
-                height: 24,
-              ),
-              TextFieldPrimary(
+                  placeholder: 'Insira seu email',
+                  required: true,
+                ),
+                const SizedBox(
+                  height: 24,
+                ),
+                TextFieldPrimary(
                   controller: password,
                   label: 'Password',
                   placeholder: 'Insira sua senha',
-                  obscureText: true),
-              const SizedBox(
-                height: 24,
-              ),
-              ButtonPrimary(
-                  onPressed: handleSubmit,
-                  isLoading: loading,
-                  title: 'Cadastrar'),
-            ],
+                  obscureText: true,
+                  required: true,
+                ),
+                const SizedBox(
+                  height: 24,
+                ),
+                ButtonPrimary(
+                    onPressed: handleSubmit,
+                    isLoading: loading,
+                    title: 'Cadastrar'),
+              ],
+            ),
           ),
         ),
       ),

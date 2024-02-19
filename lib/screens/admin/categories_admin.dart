@@ -20,6 +20,11 @@ class _CategoiresAdminPageState extends State<CategoiresAdminPage> {
   List<AppointmentCategory> categories = [];
   bool loading = true;
 
+  void handleErrorMessage(String message) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
+  }
+
   Future<void> findCategories() async {
     setState(() {
       loading = true;
@@ -31,6 +36,16 @@ class _CategoiresAdminPageState extends State<CategoiresAdminPage> {
       categories = resCategories;
       loading = false;
     });
+  }
+
+  Future<void> removeCategory(int id) async {
+    var res = await _repository.remove(id);
+    
+    if(res) {
+      await findCategories();
+    } else {
+      handleErrorMessage('Error ao remover categoria, tente novamente ou entre em contato.');   
+    }
   }
 
   @override
@@ -65,7 +80,7 @@ class _CategoiresAdminPageState extends State<CategoiresAdminPage> {
               padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 24),
               child: ListView.separated(
                 itemBuilder: (context, index) =>
-                    CardCategory(category: categories[index]),
+                    CardCategory(category: categories[index], onRemove: () => removeCategory(categories[index].id!)),
                 separatorBuilder: (context, index) => const SizedBox(
                   height: 16,
                 ),
