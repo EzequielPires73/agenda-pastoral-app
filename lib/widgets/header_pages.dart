@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 
 class HeaderPages extends StatelessWidget {
   final String title;
-  const HeaderPages({super.key, required this.title});
+  final List<Widget>? actions;
+  const HeaderPages({super.key, required this.title, this.actions});
 
   @override
   Widget build(BuildContext context) {
@@ -11,9 +12,10 @@ class HeaderPages extends StatelessWidget {
       backgroundColor: ColorPalette.primary,
       iconTheme: const IconThemeData(color: Colors.white),
       toolbarHeight: 80,
+      actions: actions,
       title: Text(
         title,
-        style: TextStyle(color: Colors.white),
+        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white),
       ),
     );
   }

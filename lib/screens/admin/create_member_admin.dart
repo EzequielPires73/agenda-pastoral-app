@@ -1,3 +1,4 @@
+import 'package:agenda_pastora_app/helpers/mask.dart';
 import 'package:agenda_pastora_app/models/member.dart';
 import 'package:agenda_pastora_app/repositories/member_repository.dart';
 import 'package:agenda_pastora_app/utils/colors.dart';
@@ -31,11 +32,16 @@ class _CreateMemberAdminPageState extends State<CreateMemberAdminPage> {
     setState(() {
       loading = true;
     });
-    var res = await _memberRepoistory.create(Member(name: name.text, email: email.text, phone: phone.text, cpf: cpf.text, password: password.text));
+    var res = await _memberRepoistory.create(Member(
+        name: name.text,
+        email: email.text,
+        phone: phone.text,
+        cpf: cpf.text,
+        password: password.text));
 
-    if(res.errorMessage != null) handleErrorMessage(res.errorMessage!);
-    if(res.member != null) Navigator.pop(context);
-  
+    if (res.errorMessage != null) handleErrorMessage(res.errorMessage!);
+    if (res.member != null) Navigator.pop(context);
+
     setState(() {
       loading = false;
     });
@@ -45,15 +51,15 @@ class _CreateMemberAdminPageState extends State<CreateMemberAdminPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: ColorPalette.primary,
-          iconTheme: const IconThemeData(color: Colors.white),
-          toolbarHeight: 80,
-          title: const Text(
-            'Cadastrar membro',
-            style: TextStyle(color: Colors.white),
-          ),
+        backgroundColor: ColorPalette.primary,
+        iconTheme: const IconThemeData(color: Colors.white),
+        toolbarHeight: 80,
+        title: const Text(
+          'Cadastrar membro',
+          style: TextStyle(color: Colors.white),
         ),
-        body: SingleChildScrollView(
+      ),
+      body: SingleChildScrollView(
         child: Container(
           alignment: Alignment.center,
           width: double.infinity,
@@ -70,16 +76,22 @@ class _CreateMemberAdminPageState extends State<CreateMemberAdminPage> {
                 height: 24,
               ),
               TextFieldPrimary(
-                  controller: phone,
-                  label: 'Telefone',
-                  placeholder: 'Insira seu telefone'),
+                controller: phone,
+                label: 'Telefone',
+                placeholder: 'Insira seu telefone',
+                formatter: [phoneFormatter],
+                type: TextInputType.number,
+              ),
               const SizedBox(
                 height: 24,
               ),
               TextFieldPrimary(
-                  controller: cpf,
-                  label: 'CPF',
-                  placeholder: 'Insira seu CPF'),
+                controller: cpf,
+                label: 'CPF',
+                placeholder: 'Insira seu CPF',
+                formatter: [cpfFormatter],
+                type: TextInputType.number,
+              ),
               const SizedBox(
                 height: 24,
               ),
@@ -98,7 +110,10 @@ class _CreateMemberAdminPageState extends State<CreateMemberAdminPage> {
               const SizedBox(
                 height: 24,
               ),
-              ButtonPrimary(onPressed: handleSubmit, isLoading: loading, title: 'Cadastrar'),
+              ButtonPrimary(
+                  onPressed: handleSubmit,
+                  isLoading: loading,
+                  title: 'Cadastrar'),
             ],
           ),
         ),

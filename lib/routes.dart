@@ -1,6 +1,7 @@
 import 'package:agenda_pastora_app/screens/about.dart';
 import 'package:agenda_pastora_app/screens/admin/categories_admin.dart';
 import 'package:agenda_pastora_app/screens/admin/create_appointment_admin.dart';
+import 'package:agenda_pastora_app/screens/admin/create_category.dart';
 import 'package:agenda_pastora_app/screens/admin/create_member_admin.dart';
 import 'package:agenda_pastora_app/screens/admin/create_responsible_admin.dart';
 import 'package:agenda_pastora_app/screens/admin/members_admin.dart';
@@ -47,6 +48,7 @@ class Routes {
     '/admin/create_appointments': (_) => const CreateAppointmentAdminPage(),
     '/admin/create_member': (_) => const CreateMemberAdminPage(),
     '/admin/create_responsible': (_) => const CreateResponsibleAdminPage(),
+    '/admin/create_category': (_) => const CreateCategoryAdminPage(),
   };
 
   static String initial = '/splash';

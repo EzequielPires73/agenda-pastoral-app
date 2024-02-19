@@ -3,6 +3,7 @@ import 'package:agenda_pastora_app/models/user.dart';
 import 'package:agenda_pastora_app/utils/colors.dart';
 import 'package:agenda_pastora_app/widgets/avatar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
 
 class Header extends StatelessWidget {
@@ -21,6 +22,14 @@ class Header extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          user != null
+              ? Avatar(
+                  image: user.avatar?.isNotEmpty == true ? user.avatar : null,
+                  name: user.name,
+                  color: Colors.white,
+                )
+              : Container(),
+          const SizedBox(width: 12,),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -31,7 +40,7 @@ class Header extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                       color: Colors.white,
-                      fontSize: 24,
+                      fontSize: 18,
                       fontWeight: FontWeight.w500),
                 ),
                 RichText(
@@ -50,14 +59,9 @@ class Header extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(width: 12,),
-          user != null
-              ? Avatar(
-                  image: user.avatar?.isNotEmpty == true ? user.avatar : null,
-                  name: user.name,
-                  color: Colors.white,
-                )
-              : Container()
+                const SizedBox(width: 12,),
+                IconButton(onPressed: () {}, padding: EdgeInsets.zero, icon: Icon(FeatherIcons.bell, color: Colors.white,))
+          
         ],
       ),
     );

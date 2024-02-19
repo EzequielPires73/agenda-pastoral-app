@@ -9,6 +9,7 @@ class TextFieldPrimary extends StatelessWidget {
   final bool obscureText;
   final bool? required;
   final int? maxLines;
+  final TextInputType? type;
   final List<TextInputFormatter>? formatter;
 
   const TextFieldPrimary(
@@ -19,7 +20,8 @@ class TextFieldPrimary extends StatelessWidget {
       this.required,
       this.placeholder,
       this.formatter,
-      this.maxLines
+      this.maxLines,
+      this.type
     });
 
   @override
@@ -44,6 +46,7 @@ class TextFieldPrimary extends StatelessWidget {
           inputFormatters: formatter,
           obscureText: obscureText,
           maxLines: maxLines ?? 1,
+          keyboardType: type,
           decoration: InputDecoration(
               hintStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w300, color: ColorPalette.gray7),
               contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
