@@ -18,6 +18,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final AppointmentRepository _repository = AppointmentRepository();
   var active = 0;
+  bool loading = true;
   List<Appointment> appointments = [];
   List<Appointment> history = [];
 
@@ -28,6 +29,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> findAppointments() async {
+    setState(() {
+      loading = true;
+    });
     final shared = await SharedPreferences.getInstance();
     final accessToken = shared.getString('member.access_token');
 
@@ -39,6 +43,7 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       appointments = resultsAppointments;
       history = resultsHistory;
+      loading = false;
     });
   }
 
@@ -88,43 +93,47 @@ class _HomePageState extends State<HomePage> {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(16),
                 ),
-                child: DefaultTabController(
-                  length: 2,
-                  child: Column(
-                    children: [
-                      TabBar(
-                        onTap: (value) => setActive(value),
-                        labelColor: ColorPalette.primary,
-                        unselectedLabelColor: Colors.black38,
-                        indicatorColor: ColorPalette.primary,
-                        tabs: const [
-                          Tab(
-                            text: 'Agendamentos',
-                          ),
-                          Tab(
-                            text: 'Histórico',
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 16,
-                      ),
-                      active == 0
-                          ? ContentView(
-                              title: 'Agendamentos',
-                              appointments: appointments,
-                              onCancel: (id) => _showMyDialogCancel(id),
-                              onRefresh: _refresh,
-                            )
-                          : ContentView(
-                              title: 'Histórico',
-                              appointments: history,
-                              onCancel: (id) => _showMyDialogCancel(id),
-                              onRefresh: _refresh,
+                child: loading
+                    ? Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : DefaultTabController(
+                        length: 2,
+                        child: Column(
+                          children: [
+                            TabBar(
+                              onTap: (value) => setActive(value),
+                              labelColor: ColorPalette.primary,
+                              unselectedLabelColor: Colors.black38,
+                              indicatorColor: ColorPalette.primary,
+                              tabs: const [
+                                Tab(
+                                  text: 'Agendamentos',
+                                ),
+                                Tab(
+                                  text: 'Histórico',
+                                ),
+                              ],
                             ),
-                    ],
-                  ),
-                ),
+                            const SizedBox(
+                              height: 16,
+                            ),
+                            active == 0
+                                ? ContentView(
+                                    title: 'Agendamentos',
+                                    appointments: appointments,
+                                    onCancel: (id) => _showMyDialogCancel(id),
+                                    onRefresh: _refresh,
+                                  )
+                                : ContentView(
+                                    title: 'Histórico',
+                                    appointments: history,
+                                    onCancel: (id) => _showMyDialogCancel(id),
+                                    onRefresh: _refresh,
+                                  ),
+                          ],
+                        ),
+                      ),
               )
             ],
           ),
