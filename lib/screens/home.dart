@@ -110,28 +110,18 @@ class _HomePageState extends State<HomePage> {
                         height: 16,
                       ),
                       active == 0
-                          ? Column(
-                              children: [
-                                ...appointments
-                                    .map((e) => CardAppointmentsUser(
-                                          appointment: e,
-                                          onPress: _refresh,
-                                          onCancel: _showMyDialogCancel,
-                                        ))
-                                    .toList(),
-                              ],
+                          ? ContentView(
+                              title: 'Agendamentos',
+                              appointments: appointments,
+                              onCancel: (id) => _showMyDialogCancel(id),
+                              onRefresh: _refresh,
                             )
-                          : Column(
-                              children: [
-                                ...history
-                                    .map((e) => CardAppointmentsUser(
-                                          appointment: e,
-                                          onPress: _refresh,
-                                          onCancel: _showMyDialogCancel,
-                                        ))
-                                    .toList(),
-                              ],
-                            )
+                          : ContentView(
+                              title: 'Histórico',
+                              appointments: history,
+                              onCancel: (id) => _showMyDialogCancel(id),
+                              onRefresh: _refresh,
+                            ),
                     ],
                   ),
                 ),
@@ -156,5 +146,37 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+}
+
+class ContentView extends StatelessWidget {
+  final String title;
+  final List<Appointment> appointments;
+  final Function() onRefresh;
+  final Function(int id) onCancel;
+  const ContentView(
+      {super.key,
+      required this.title,
+      required this.appointments,
+      required this.onRefresh,
+      required this.onCancel});
+
+  @override
+  Widget build(BuildContext context) {
+    return appointments.isNotEmpty
+        ? Column(
+            children: [
+              ...appointments
+                  .map((e) => CardAppointmentsUser(
+                        appointment: e,
+                        onPress: onRefresh,
+                        onCancel: (id) => onCancel(id),
+                      ))
+                  .toList(),
+            ],
+          )
+        : Container(
+            child: Text('Nenhum compromisso em $title foi encontrado'),
+          );
   }
 }

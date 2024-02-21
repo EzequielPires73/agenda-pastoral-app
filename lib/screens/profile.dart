@@ -1,4 +1,5 @@
 import 'package:agenda_pastora_app/controllers/auth_controller.dart';
+import 'package:agenda_pastora_app/models/user.dart';
 import 'package:agenda_pastora_app/utils/colors.dart';
 import 'package:agenda_pastora_app/widgets/header.dart';
 import 'package:flutter/material.dart';
@@ -13,8 +14,35 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  final Widget list = Column(
+    children: [
+    const ProfileItem(
+        icon: FeatherIcons.box,
+        path: '/admin/categories',
+        title: 'Categorias de agendamento'),
+    const SizedBox(
+      height: 24,
+    ),
+    const ProfileItem(
+        icon: FeatherIcons.users, path: '/admin/members', title: 'Membros'),
+    const SizedBox(
+      height: 24,
+    ),
+    const ProfileItem(
+        icon: FeatherIcons.userCheck,
+        path: '/admin/users',
+        title: 'Usuários do sistema'),
+    const SizedBox(
+      height: 24,
+    ),
+    ],
+  );
+
   @override
   Widget build(BuildContext context) {
+    final controller = context.watch<AuthController>();
+    final UserAbstract? user = controller.member ?? controller.user;
+
     return Scaffold(
         body: SingleChildScrollView(
             child: Column(children: [
@@ -50,27 +78,7 @@ class _ProfilePageState extends State<ProfilePage> {
           const SizedBox(
             height: 24,
           ),
-          const ProfileItem(
-              icon: FeatherIcons.box,
-              path: '/admin/categories',
-              title: 'Categorias de agendamento'),
-          const SizedBox(
-            height: 24,
-          ),
-          const ProfileItem(
-              icon: FeatherIcons.users,
-              path: '/admin/members',
-              title: 'Membros'),
-          const SizedBox(
-            height: 24,
-          ),
-          const ProfileItem(
-              icon: FeatherIcons.userCheck,
-              path: '/admin/users',
-              title: 'Usuários do sistema'),
-          const SizedBox(
-            height: 24,
-          ),
+          controller.user != null ? list : Container(),
           Consumer<AuthController>(
             builder: (context, value, child) => ProfileItem(
                 icon: FeatherIcons.logOut,

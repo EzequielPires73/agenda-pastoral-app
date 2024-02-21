@@ -62,22 +62,26 @@ class _MembersAdminPageState extends State<MembersAdminPage> {
             )
           : Container(
               padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 24),
-              child: ListView.separated(
-                itemBuilder: (context, index) => CardMember(
-                  member: members[index],
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          MemberViewPage(member: members[index]),
+              child: members.isNotEmpty
+                  ? ListView.separated(
+                      itemBuilder: (context, index) => CardMember(
+                        member: members[index],
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                MemberViewPage(member: members[index]),
+                          ),
+                        ),
+                      ),
+                      separatorBuilder: (context, index) => const SizedBox(
+                        height: 16,
+                      ),
+                      itemCount: members.length,
+                    )
+                  : Container(
+                      child: Text('Nenhum membro foi encontrado'),
                     ),
-                  ),
-                ),
-                separatorBuilder: (context, index) => const SizedBox(
-                  height: 16,
-                ),
-                itemCount: members.length,
-              ),
             ),
     );
   }

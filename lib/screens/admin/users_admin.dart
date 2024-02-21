@@ -62,22 +62,26 @@ class _UsersAdminPageState extends State<UsersAdminPage> {
             )
           : Container(
               padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 24),
-              child: ListView.separated(
-                itemBuilder: (context, index) => CardMember(
-                  member: responsible[index],
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          UserViewPage(user: responsible[index]),
+              child: responsible.isNotEmpty
+                  ? ListView.separated(
+                      itemBuilder: (context, index) => CardMember(
+                        member: responsible[index],
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                UserViewPage(user: responsible[index]),
+                          ),
+                        ),
+                      ),
+                      separatorBuilder: (context, index) => const SizedBox(
+                        height: 16,
+                      ),
+                      itemCount: responsible.length,
+                    )
+                  : Container(
+                      child: Text('Nenhum usuário do sistema foi encontrado'),
                     ),
-                  ),
-                ),
-                separatorBuilder: (context, index) => const SizedBox(
-                  height: 16,
-                ),
-                itemCount: responsible.length,
-              ),
             ),
     );
   }
