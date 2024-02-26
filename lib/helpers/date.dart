@@ -18,6 +18,12 @@ String formatTime(String time) {
   String formattedTime = timeFormat.format(DateTime.parse('2000-01-01 $time'));
   return formattedTime;
 }
+String formatTimeCreate(String time) {
+  final DateFormat timeFormat = DateFormat('HH:mm');
+  String formattedTime = timeFormat.format(DateTime.parse(time));
+  print(formattedTime);
+  return '${formattedTime.replaceAll(' AM', '')}:00';
+}
 
 String formatDate(String date) {
   final DateFormat dateFormat = DateFormat('dd/MM');

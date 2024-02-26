@@ -128,24 +128,35 @@ class _AppointmentsAdminPageState extends State<AppointmentsAdminPage> {
               ),
             ),
           ),
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 25),
-            sliver:
-                availableTimes.isNotEmpty && availableTimes[0].times.isNotEmpty
-                    ? SliverGrid.count(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 8,
-                        mainAxisSpacing: 8,
-                        childAspectRatio: 1.4,
-                        children: availableTimes[0]
-                            .times
-                            .map((e) => CardAvailableTime(time: e, onAction: () => findAppointments(selectedDate),))
-                            .toList(),
-                      )
-                    : const SliverToBoxAdapter(
-                        child: Text('Nenhum horário livre foi encontrado.'),
-                      ),
-          ),
+          loading
+              ? SliverPadding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25),
+                  sliver: SliverToBoxAdapter(
+                    child: Text('Nenhum horário livre foi encontrado.'),
+                  ),
+                )
+              : SliverPadding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25),
+                  sliver: availableTimes.isNotEmpty &&
+                          availableTimes[0].times.isNotEmpty
+                      ? SliverGrid.count(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 8,
+                          mainAxisSpacing: 8,
+                          childAspectRatio: 1.4,
+                          children: availableTimes[0]
+                              .times
+                              .map((e) => CardAvailableTime(
+                                    time: e,
+                                    onAction: () =>
+                                        findAppointments(selectedDate),
+                                  ))
+                              .toList(),
+                        )
+                      : const SliverToBoxAdapter(
+                          child: Text('Nenhum horário livre foi encontrado.'),
+                        ),
+                ),
           SliverToBoxAdapter(
             child: Container(
               padding: const EdgeInsets.only(right: 25, left: 25, top: 16),
@@ -221,7 +232,7 @@ class _AppointmentsAdminPageState extends State<AppointmentsAdminPage> {
 
       print(res);
 
-      if(res.errorMessage != null) handleErrorMessage(res.errorMessage!);
+      if (res.errorMessage != null) handleErrorMessage(res.errorMessage!);
       if (res.success == true) await findAppointments(selectedDate);
     } catch (e) {
       setState(() {

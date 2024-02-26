@@ -141,8 +141,8 @@ class AppointmentController extends ChangeNotifier {
               category: category!,
               date: formatDateSelected(selectedDay),
               observation: observation.text,
-              start: time!.start,
-              end: time!.end,
+              start: '${time!.start.replaceAll(' AM', '')}:00',
+              end: '${time!.end.replaceAll(' AM', '')}:00',
               status: 'pendente',
               member: Member.fromJson(jsonDecode(member)),
             ),
@@ -163,6 +163,7 @@ class AppointmentController extends ChangeNotifier {
         state = AppointmentState.error;
       }
     } catch (error) {
+      print(error);
       state = AppointmentState.error;
       errorMsg = error.toString();
     } finally {
@@ -191,8 +192,8 @@ class AppointmentController extends ChangeNotifier {
                 category: category!,
                 date: formatDateSelected(selectedDay),
                 observation: observation.text,
-                start: time!.start,
-                end: time!.end,
+                start: '${time!.start.replaceAll(' AM', '')}:00',
+                end: '${time!.end.replaceAll(' AM', '')}:00',
                 status: responsibleSelected != null ? 'confirmado' : 'pendente',
                 member: memberSelected as Member,
                 responsible: responsibleSelected != null
@@ -254,8 +255,7 @@ class AppointmentController extends ChangeNotifier {
       return throw Exception(
           'Um membro é necessário para o agendamento, faça login novamente.');
     } else if (accessToken == null) {
-      return throw Exception(
-          'Usuário inválido faça login novamente.');
+      return throw Exception('Usuário inválido faça login novamente.');
     }
   }
 }

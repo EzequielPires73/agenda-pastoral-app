@@ -170,45 +170,47 @@ class SwipperAppointments extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(
-          height: 222,
-          child: appointments.isNotEmpty
-              ? ListView.builder(
+        loading
+            ? SizedBox(
+                height: 222,
+                child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) => index == 0
-                      ? Padding(
-                          padding: const EdgeInsets.only(left: 25, right: 16),
+                  itemBuilder: (context, index) => Padding(
+                    padding: index == 0
+                        ? const EdgeInsets.only(left: 25, right: 16)
+                        : const EdgeInsets.only(right: 16),
+                    child:
+                        SizedBox(width: 348, child: CardAppointmentsAdminSk()),
+                  ),
+                  itemCount: loading != true ? appointments.length : 4,
+                ),
+              )
+            : SizedBox(
+                height: 222,
+                child: appointments.isNotEmpty
+                    ? ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) => Padding(
+                          padding: index == 0
+                              ? const EdgeInsets.only(left: 25, right: 16)
+                              : const EdgeInsets.only(right: 16),
                           child: SizedBox(
                             width: 348,
-                            child: loading == true
-                                ? const CardAppointmentsAdminSk()
-                                : CardAppointmentsAdmin(
-                                    onPress: refresh,
-                                    appointment: appointments[index],
-                                    onCancel: showMyDialogCancel,
-                                  ),
-                          ),
-                        )
-                      : Padding(
-                          padding: const EdgeInsets.only(right: 16),
-                          child: SizedBox(
-                            width: 360,
-                            child: loading == true
-                                ? const CardAppointmentsAdminSk()
-                                : CardAppointmentsAdmin(
-                                    onPress: refresh,
-                                    appointment: appointments[index],
-                                    onCancel: showMyDialogCancel,
-                                  ),
+                            child: CardAppointmentsAdmin(
+                              onPress: refresh,
+                              appointment: appointments[index],
+                              onCancel: showMyDialogCancel,
+                            ),
                           ),
                         ),
-                  itemCount: loading != true ? appointments.length : 4,
-                )
-              : Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: Text('Nenhum compromisso em $title foi encontrado'),
-                ),
-        )
+                        itemCount: loading != true ? appointments.length : 4,
+                      )
+                    : Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 25),
+                        child:
+                            Text('Nenhum compromisso em $title foi encontrado'),
+                      ),
+              ),
       ],
     );
   }

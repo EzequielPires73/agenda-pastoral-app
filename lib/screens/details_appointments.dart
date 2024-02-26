@@ -175,9 +175,7 @@ class _DetailsAppointmentsState extends State<DetailsAppointments> {
                                                 fontSize: 18,
                                                 fontWeight: FontWeight.w500),
                                           ),
-                                          Text(
-                                              appointment?.responsible?.email ??
-                                                  ''),
+                                          Text('secretariaadcatalao@gmail.com'),
                                         ],
                                       ),
                                       Avatar(image: null, name: 'AD Catalão'),

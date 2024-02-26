@@ -77,6 +77,7 @@ class AppointmentRepository {
 
   Future<AppointmentCreationResult> create(Appointment appointment, String? token) async {
     try {
+      print(appointment.toJson());
       var res = await _apiService.post(
         'appointments',
         appointment.toJson(),
