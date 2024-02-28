@@ -35,6 +35,13 @@ class _ProfilePageState extends State<ProfilePage> {
     const SizedBox(
       height: 24,
     ),
+    const ProfileItem(
+        icon: FeatherIcons.pieChart,
+        path: '/admin/reports',
+        title: 'Relatórios'),
+    const SizedBox(
+      height: 24,
+    ),
     ],
   );
 

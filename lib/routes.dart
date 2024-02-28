@@ -5,6 +5,7 @@ import 'package:agenda_pastora_app/screens/admin/create_category.dart';
 import 'package:agenda_pastora_app/screens/admin/create_member_admin.dart';
 import 'package:agenda_pastora_app/screens/admin/create_responsible_admin.dart';
 import 'package:agenda_pastora_app/screens/admin/members_admin.dart';
+import 'package:agenda_pastora_app/screens/admin/reports_admin.dart';
 import 'package:agenda_pastora_app/screens/admin/users_admin.dart';
 import 'package:agenda_pastora_app/screens/privacy_policy.dart';
 import 'package:agenda_pastora_app/screens/screen_navigator.dart';
@@ -41,6 +42,7 @@ class Routes {
 
     /* Admin Routes */
     '/admin/categories': (_) => const CategoiresAdminPage(),
+    '/admin/reports': (_) => const ReportsAdminPage(),
     '/admin/members': (_) => const MembersAdminPage(),
     '/admin/users': (_) => const UsersAdminPage(),
     '/admin/login': (_) => const LoginAdminPage(),
