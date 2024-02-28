@@ -15,16 +15,20 @@ class _ReportsAdminPageState extends State<ReportsAdminPage> {
   final ReportRepository _repository = ReportRepository();
   late TooltipBehavior _tooltip;
   bool loading = true;
+  List<ChartData> members = [];
   List<ChartData> months = [];
   List<ChartData> categories = [];
   List<ChartData> status = [];
 
   Future<void> hydrate() async {
-    ReportResponse res = await _repository.findData();
+    ReportResponse appointmentsData = await _repository.findData();
+    ReportResponse membersData = await _repository.findMembers();
+
     setState(() {
-      months = res.months ?? [];
-      categories = res.categories ?? [];
-      status = res.status ?? [];
+      members = membersData.members ?? [];
+      months = appointmentsData.months ?? [];
+      categories = appointmentsData.categories ?? [];
+      status = appointmentsData.status ?? [];
       loading = false;
     });
   }
@@ -59,7 +63,7 @@ class _ReportsAdminPageState extends State<ReportsAdminPage> {
                     SfCartesianChart(
                       primaryXAxis: CategoryAxis(),
                       title: ChartTitle(
-                          text: 'Agendamentos por mês',
+                          text: 'Relatório mensal',
                           textStyle: TextStyle(fontWeight: FontWeight.w600),
                           alignment: ChartAlignment.near),
                       legend: Legend(isVisible: true),
@@ -70,6 +74,13 @@ class _ReportsAdminPageState extends State<ReportsAdminPage> {
                           xValueMapper: (ChartData sales, _) => sales.x,
                           yValueMapper: (ChartData sales, _) => sales.y,
                           name: 'Agendamentos',
+                          dataLabelSettings: DataLabelSettings(isVisible: true),
+                        ),
+                        LineSeries<ChartData, String>(
+                          dataSource: members,
+                          xValueMapper: (ChartData sales, _) => sales.x,
+                          yValueMapper: (ChartData sales, _) => sales.y,
+                          name: 'Membros',
                           dataLabelSettings: DataLabelSettings(isVisible: true),
                         )
                       ],

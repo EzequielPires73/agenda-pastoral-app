@@ -13,6 +13,7 @@ class ChartData {
 }
 
 class ReportResponse {
+  List<ChartData>? members;
   List<ChartData>? months;
   List<ChartData>? status;
   List<ChartData>? categories;
@@ -21,9 +22,30 @@ class ReportResponse {
 class ReportRepository {
   final ApiService _apiService = ApiService();
 
+  Future<ReportResponse> findMembers() async {
+    ReportResponse response = ReportResponse();
+    try {
+      var res = await _apiService.get('/members/report', null);
+      if (res['success']) {
+        var results = res['results'] as List;
+        print(results);
+
+        List<ChartData> members =
+            results.map((e) => ChartData.fromJson(e)).toList();
+        response.members = members;
+
+        return response;
+      } else {
+        return response;
+      }
+    } catch (error) {
+      print(error);
+      return response;
+    }
+  }
+
   Future<ReportResponse> findData() async {
     ReportResponse response = ReportResponse();
-    print(response);
     try {
       var res = await _apiService.get('/appointments/report', null);
       print(res);
