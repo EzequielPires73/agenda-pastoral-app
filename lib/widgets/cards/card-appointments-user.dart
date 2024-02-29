@@ -173,7 +173,7 @@ class CardAppointmentsUser extends StatelessWidget {
                       await Navigator.pushNamed(
                           context, '/details_appointments',
                           arguments: {"id": appointment.id});
-                      onPress();
+                      await onPress();
                     },
                     title: 'Detalhes'),
               ),

@@ -36,6 +36,7 @@ class AppointmentNotification {
       member: json['member'] != null ? Member.fromJson(json['member']) : null,
       user: json['user'] != null ? User.fromJson(json['user']) : null,
       id: json['id'],
+      createdAt: json['created_at'] != null ? DateTime.parse(json['created_at']) : null,
       appointment: json['appointment'] != null ? Appointment.fromJson(json['appointment']) : null
     );
   }

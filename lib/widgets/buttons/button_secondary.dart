@@ -5,12 +5,17 @@ class ButtonSecondary extends StatelessWidget {
   final String title;
   final VoidCallback onPressed;
   final bool? isLoading;
+  final Color? color;
+  final Color? background;
 
-  const ButtonSecondary(
-      {super.key,
-      required this.onPressed,
-      required this.title,
-      this.isLoading});
+  const ButtonSecondary({
+    super.key,
+    required this.onPressed,
+    required this.title,
+    this.isLoading,
+    this.color,
+    this.background
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +27,7 @@ class ButtonSecondary extends StatelessWidget {
         child: ElevatedButton(
           style: ButtonStyle(
             backgroundColor: MaterialStateColor.resolveWith(
-                (states) => ColorPalette.primaryLight),
+                (states) => background ?? ColorPalette.primaryLight),
             shape: MaterialStateProperty.all(
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(6.0),
@@ -34,8 +39,8 @@ class ButtonSecondary extends StatelessWidget {
               ? const CircularProgressIndicator()
               : Text(
                   title,
-                  style: const TextStyle(
-                      color: ColorPalette.primary,
+                  style: TextStyle(
+                      color: color ?? ColorPalette.primary,
                       fontSize: 16,
                       fontWeight: FontWeight.w600),
                 ),

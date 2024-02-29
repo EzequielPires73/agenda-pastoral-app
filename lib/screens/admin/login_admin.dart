@@ -19,6 +19,7 @@ class LoginAdminPage extends StatefulWidget {
 
 class _LoginAdminPageState extends State<LoginAdminPage> {
   late final AuthController controller;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final email = TextEditingController();
   final password = TextEditingController();
   late final String? tokenNotification;
@@ -30,8 +31,9 @@ class _LoginAdminPageState extends State<LoginAdminPage> {
   } */
 
   Future<void> _handleSubmit() async {
-    controller.singinUser(
-        email.value.text, password.value.text);
+    if (_formKey.currentState!.validate()) {
+      controller.singinUser(email.value.text, password.value.text);
+    }
   }
 
   void _authListener() {
@@ -82,68 +84,75 @@ class _LoginAdminPageState extends State<LoginAdminPage> {
           alignment: Alignment.center,
           width: double.infinity,
           padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 48),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(
-                'assets/logo_v.png',
-                width: 134,
-              ),
-              const SizedBox(
-                height: 24,
-              ),
-              const Text(
-                'Agenda Pastoral',
-                style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
-                    color: ColorPalette.primary),
-              ),
-              const Text(
-                'Faça seu login',
-                style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black87),
-              ),
-              const SizedBox(
-                height: 24,
-              ),
-              TextFieldPrimary(
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  'assets/logo_v.png',
+                  width: 134,
+                ),
+                const SizedBox(
+                  height: 24,
+                ),
+                const Text(
+                  'Agenda Pastoral',
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                      color: ColorPalette.primary),
+                ),
+                const Text(
+                  'Faça seu login',
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87),
+                ),
+                const SizedBox(
+                  height: 24,
+                ),
+                TextFieldPrimary(
                   controller: email,
                   label: 'Email',
-                  placeholder: 'Insira seu email'),
-              const SizedBox(
-                height: 24,
-              ),
-              TextFieldPrimary(
+                  placeholder: 'Insira seu email',
+                  required: true,
+                ),
+                const SizedBox(
+                  height: 24,
+                ),
+                TextFieldPrimary(
                   controller: password,
                   label: 'Password',
                   placeholder: 'Insira sua senha',
-                  obscureText: true),
-              const SizedBox(
-                height: 24,
-              ),
-              Container(
-                alignment: Alignment.centerRight,
-                child: const InkWell(
-                    child: Text(
-                  'Esqueceu sua senha?',
-                  style: TextStyle(fontWeight: FontWeight.w600),
-                )),
-              ),
-              const SizedBox(
-                height: 24,
-              ),
-              Consumer<AuthController>(
-                builder: (context, value, child) => ButtonPrimary(
-                  onPressed: _handleSubmit,
-                  title: 'Entrar',
-                  isLoading: value.isLoading,
+                  obscureText: true,
+                  required: true,
                 ),
-              ),
-            ],
+                const SizedBox(
+                  height: 24,
+                ),
+                Container(
+                  alignment: Alignment.centerRight,
+                  child: const InkWell(
+                      child: Text(
+                    'Esqueceu sua senha?',
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  )),
+                ),
+                const SizedBox(
+                  height: 24,
+                ),
+                Consumer<AuthController>(
+                  builder: (context, value, child) => ButtonPrimary(
+                    onPressed: _handleSubmit,
+                    title: 'Entrar',
+                    isLoading: value.isLoading,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

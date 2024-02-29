@@ -1,5 +1,6 @@
 import 'package:agenda_pastora_app/controllers/auth_controller.dart';
 import 'package:agenda_pastora_app/helpers/date.dart';
+import 'package:agenda_pastora_app/helpers/launch.dart';
 import 'package:agenda_pastora_app/helpers/status.dart';
 import 'package:agenda_pastora_app/models/appointment.dart';
 import 'package:agenda_pastora_app/models/member.dart';
@@ -223,10 +224,9 @@ class _DetailsAppointmentsState extends State<DetailsAppointments> {
                                         onTap: () => Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (context) =>
-                                                UserViewPage(
-                                                    user:
-                                                        appointment!.responsible!),
+                                            builder: (context) => UserViewPage(
+                                                user:
+                                                    appointment!.responsible!),
                                           ),
                                         ),
                                       ),
@@ -246,7 +246,7 @@ class _DetailsAppointmentsState extends State<DetailsAppointments> {
                                         height: 24,
                                       ),
                                       const Text(
-                                        'Observação',
+                                        'Descrição',
                                         style: TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.w500,
@@ -271,6 +271,31 @@ class _DetailsAppointmentsState extends State<DetailsAppointments> {
                                   )
                                 : Container(),
                             const SizedBox(height: 24),
+                            Consumer<AuthController>(
+                              builder: (context, value, child) => value
+                                          .member !=
+                                      null
+                                  ? Row(
+                                      children: [
+                                        Expanded(
+                                            child: ButtonPrimary(
+                                                onPressed: () =>
+                                                    launchPhone('64999442552'),
+                                                title: 'Ligar')),
+                                        const SizedBox(
+                                          width: 16,
+                                        ),
+                                        Expanded(
+                                            child: ButtonSecondary(
+                                                onPressed: () =>
+                                                    openWhatsApp('64999442552'),
+                                                background: Colors.green,
+                                                color: Colors.white,
+                                                title: 'Whatsapp')),
+                                      ],
+                                    )
+                                  : Container(),
+                            ),
                             Column(
                               children: [
                                 Consumer<AuthController>(
@@ -302,6 +327,8 @@ class _DetailsAppointmentsState extends State<DetailsAppointments> {
                                 appointment!.status == 'pendente' ||
                                         appointment!.status == 'confirmado'
                                     ? ButtonSecondary(
+                                        background: Colors.red,
+                                        color: Colors.white,
                                         onPressed: _showMyDialogCancel,
                                         title: 'Cancelar agendamento',
                                       )

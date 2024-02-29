@@ -82,7 +82,7 @@ class _CategoiresAdminPageState extends State<CategoiresAdminPage> {
                 itemBuilder: (context, index) =>
                     CardCategory(category: categories[index], onRemove: () => removeCategory(categories[index].id!)),
                 separatorBuilder: (context, index) => const SizedBox(
-                  height: 16,
+                  height: 0,
                 ),
                 itemCount: categories.length,
               ),

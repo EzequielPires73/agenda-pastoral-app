@@ -119,3 +119,9 @@ String formatTimeSelected(TimeOfDay time) {
 String formatTimeHourMinute(TimeOfDay time) {
   return '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
 }
+
+String formatTimeFromDate(DateTime date) {
+  final DateFormat timeFormat = DateFormat('HH:mm');
+  String formattedTime = timeFormat.format(date);
+  return formattedTime;
+}

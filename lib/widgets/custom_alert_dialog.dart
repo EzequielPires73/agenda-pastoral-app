@@ -55,8 +55,8 @@ class CustomAlertDialog extends StatelessWidget {
                 ),
                 Expanded(
                   child: ButtonConfirm(
-                      onPressed: () {
-                        onChange();
+                      onPressed: () async {
+                        await onChange();
                         Navigator.of(context).pop();
                       },
                       title: 'Confirmar'),

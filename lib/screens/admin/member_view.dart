@@ -1,8 +1,10 @@
 import 'package:agenda_pastora_app/models/member.dart';
+import 'package:agenda_pastora_app/repositories/member_repository.dart';
 import 'package:agenda_pastora_app/utils/colors.dart';
 import 'package:agenda_pastora_app/widgets/avatar.dart';
 import 'package:agenda_pastora_app/widgets/buttons/button_primary.dart';
 import 'package:agenda_pastora_app/widgets/buttons/button_secondary.dart';
+import 'package:agenda_pastora_app/widgets/custom_alert_dialog.dart';
 import 'package:agenda_pastora_app/widgets/header_pages.dart';
 import 'package:agenda_pastora_app/widgets/typography/h1.dart';
 import 'package:agenda_pastora_app/widgets/typography/label.dart';
@@ -19,11 +21,21 @@ class MemberViewPage extends StatefulWidget {
 }
 
 class _MemberViewPageState extends State<MemberViewPage> {
+  final MemberRepoistory _repoistory = MemberRepoistory();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-          child: HeaderPages(title: 'Membros'),
+          child: HeaderPages(
+            title: 'Membros',
+            actions: [
+              IconButton(
+                onPressed: showMyDialogCancel,
+                icon: Icon(Icons.delete_outline),
+              )
+            ],
+          ),
           preferredSize: Size(double.infinity, 80)),
       body: SingleChildScrollView(
         child: Container(
@@ -62,8 +74,9 @@ class _MemberViewPageState extends State<MemberViewPage> {
                     width: 16,
                   ),
                   Expanded(
-                      child:
-                          ButtonSecondary(onPressed: () => _openWhatsApp(widget.member.phone), title: 'Whatsapp')),
+                      child: ButtonSecondary(
+                          onPressed: () => _openWhatsApp(widget.member.phone),
+                          title: 'Whatsapp')),
                 ],
               )
             ],
@@ -91,4 +104,22 @@ class _MemberViewPageState extends State<MemberViewPage> {
       throw 'Could not launch $url';
     }
   }
+
+  Future<void> showMyDialogCancel() async {
+      return showDialog<void>(
+          context: context,
+          barrierDismissible: false, // user must tap button!
+          builder: (BuildContext context) {
+            return CustomAlertDialog(
+              title: 'Remover Membro',
+              subtitle: 'Deseja mesmo remover o membro ${widget.member.name}?',
+              onChange: () async {
+                var res = await _repoistory.remove(widget.member.id!);
+                if(res) {
+                  Navigator.pushReplacementNamed(context, '/admin/members');
+                }
+              },
+            );
+          });
+    }
 }

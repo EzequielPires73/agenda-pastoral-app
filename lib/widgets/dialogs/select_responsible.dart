@@ -16,11 +16,16 @@ class SelectResponsible extends StatefulWidget {
 class _SelectResponsibleState extends State<SelectResponsible> {
   final AppointmentRepository _repository = AppointmentRepository();
   List<User> responsible = [];
+  bool loading = false;
 
   Future<void> findResponsible() async {
+    setState(() {
+      loading = true;
+    });
     var resResponsible = await _repository.findResponsibles();
     setState(() {
       responsible = resResponsible;
+      loading = false;
     });
   }
 
@@ -56,7 +61,11 @@ class _SelectResponsibleState extends State<SelectResponsible> {
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
           ),
         ),
-        body: Container(
+        body: loading
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : Container(
           padding: const EdgeInsets.symmetric(horizontal: 25),
           child: ListView.separated(
             itemBuilder: (context, index) => CardMember(

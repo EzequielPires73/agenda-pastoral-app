@@ -16,18 +16,17 @@ class CardCategory extends StatelessWidget {
   Widget build(BuildContext context) {
     Future<void> showMyDialogCancel() async {
       return showDialog<void>(
-        context: context,
-        barrierDismissible: false, // user must tap button!
-        builder: (BuildContext context) {
-          return CustomAlertDialog(
+          context: context,
+          barrierDismissible: false, // user must tap button!
+          builder: (BuildContext context) {
+            return CustomAlertDialog(
               title: 'Remover Categoria',
               subtitle: 'Deseja mesmo remover a categoria ${category.name}?',
               onChange: onRemove,
-          );
-        }
-      );
+            );
+          });
     }
-    
+
     return Card(
       elevation: 0,
       color: Colors.white,
@@ -40,15 +39,21 @@ class CardCategory extends StatelessWidget {
             borderRadius: BorderRadius.circular(8)),
         child:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(category.name),
-              const SizedBox(
-                height: 4,
-              ),
-              Span(text: 'Duração: ${category.duration} minutos'),
-            ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  category.name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(
+                  height: 4,
+                ),
+                Span(text: 'Duração: ${category.duration} minutos'),
+              ],
+            ),
           ),
           const SizedBox(
             width: 8,

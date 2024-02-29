@@ -1,4 +1,5 @@
 import 'package:agenda_pastora_app/controllers/auth_controller.dart';
+import 'package:agenda_pastora_app/helpers/date.dart';
 import 'package:agenda_pastora_app/models/notification.dart';
 import 'package:agenda_pastora_app/models/user.dart';
 import 'package:agenda_pastora_app/widgets/avatar.dart';
@@ -38,6 +39,11 @@ class CardNotification extends StatelessWidget {
                     notification.body,
                     style: const TextStyle(
                         fontSize: 12, fontWeight: FontWeight.w500),
+                  ),
+                  Text(
+                    '${formatDateDayMonth(notification.createdAt!)} ${formatTimeFromDate(notification.createdAt!)}',
+                    style: const TextStyle(
+                        fontSize: 12, fontWeight: FontWeight.w400, color: Colors.black54),
                   ),
                 ],
               ),

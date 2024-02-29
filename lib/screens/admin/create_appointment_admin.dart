@@ -110,9 +110,9 @@ class _CreateAppointmentAdminPageState
                             const EdgeInsets.only(left: 25, right: 25, top: 32),
                         child: TextFieldPrimary(
                           controller: controller.observation,
-                          label: 'Assunto do agendamento',
+                          label: 'Descrição do agendamento',
                           placeholder:
-                              'Descreva brevemente o assunto do agendamento',
+                              'Por favor, forneça uma breve descrição do motivo para o atendimento.',
                           maxLines: 4,
                         ),
                       ),

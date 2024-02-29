@@ -15,11 +15,16 @@ class SelectMember extends StatefulWidget {
 class _SelectMemberState extends State<SelectMember> {
   final AppointmentRepository _repository = AppointmentRepository();
   List<Member> members = [];
+  bool loading = true;
 
   Future<void> findMembers() async {
+    setState(() {
+      loading = true;
+    });
     var resMembers = await _repository.findMembers();
     setState(() {
       members = resMembers;
+      loading = false;
     });
   }
 
@@ -55,7 +60,11 @@ class _SelectMemberState extends State<SelectMember> {
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
           ),
         ),
-        body: Container(
+        body: loading
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : Container(
           padding: const EdgeInsets.symmetric(horizontal: 25),
           child: ListView.separated(
             itemBuilder: (context, index) => CardMember(

@@ -62,4 +62,14 @@ class MemberRepoistory {
       return MemberCreationResult(errorMessage: error.toString());
     }
   }
+
+  Future<bool> remove(String id) async {
+    try {
+      var res = await _apiService.delete('members/$id', null, null);
+      
+      return res['success'];
+    } catch(error) {
+      return false;
+    }
+  }
 }
