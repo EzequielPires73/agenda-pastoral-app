@@ -13,6 +13,7 @@ import 'package:agenda_pastora_app/widgets/calendar_admin.dart';
 import 'package:agenda_pastora_app/widgets/cards/card-appointments-admin.dart';
 import 'package:agenda_pastora_app/widgets/cards/card-available-time.dart';
 import 'package:agenda_pastora_app/widgets/header.dart';
+import 'package:agenda_pastora_app/widgets/loading.dart';
 import 'package:agenda_pastora_app/widgets/modals/modal-create-available-time.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -72,6 +73,13 @@ class _AppointmentsAdminPageState extends State<AppointmentsAdminPage> {
     }
   }
 
+  Future<void> _loadInitialValues() async {
+    await controller.loadInitialValues();
+    setState(() {
+      loading = false;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -79,6 +87,7 @@ class _AppointmentsAdminPageState extends State<AppointmentsAdminPage> {
     availableTimeController = context.read<AvailableTimeController>();
 
     availableTimeController.addListener(availableTimeListener);
+    _loadInitialValues();
     findAppointments(selectedDate);
   }
 
@@ -97,20 +106,26 @@ class _AppointmentsAdminPageState extends State<AppointmentsAdminPage> {
             child: Column(
               children: [
                 const Header(),
-                Container(
-                  width: double.infinity,
-                  transform: Matrix4.translationValues(0, -16, 0),
-                  padding: const EdgeInsets.only(
-                    top: 32,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: CustomCalendarAdmin(
-                      onChange: (selectedDate) =>
-                          changeSelectedDate(selectedDate),
-                      selectedDate: selectedDate),
+                Consumer<AppointmentController>(
+                  builder: (context, value, child) {
+                    return (Container(
+                      width: double.infinity,
+                      transform: Matrix4.translationValues(0, -16, 0),
+                      padding: const EdgeInsets.only(
+                        top: 32,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: CustomCalendarAdmin(
+                        onChange: (selectedDate) =>
+                            changeSelectedDate(selectedDate),
+                        selectedDate: selectedDate,
+                        availableTimes: value.availableTimes,
+                      ),
+                    ));
+                  },
                 ),
               ],
             ),
@@ -132,7 +147,7 @@ class _AppointmentsAdminPageState extends State<AppointmentsAdminPage> {
               ? SliverPadding(
                   padding: const EdgeInsets.symmetric(horizontal: 25),
                   sliver: SliverToBoxAdapter(
-                    child: Text('Nenhum horário livre foi encontrado.'),
+                    child: Loading(),
                   ),
                 )
               : SliverPadding(

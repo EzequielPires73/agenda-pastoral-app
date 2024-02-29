@@ -67,6 +67,12 @@ class _CustomCalendarState extends State<CustomCalendar> {
                 color: ColorPalette.primary,
                 shape: BoxShape.circle,
               ),
+              weekendDecoration: BoxDecoration(
+                color: ColorPalette
+                    .greenLight, // ou qualquer cor que você deseje para os finais de semana
+                shape: BoxShape.circle,
+              ),
+              weekendTextStyle: TextStyle(color: ColorPalette.green),
             ),
             selectedDayPredicate: (day) {
               return isSameDay(value.selectedDay, day);
